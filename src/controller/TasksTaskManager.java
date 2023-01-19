@@ -1,3 +1,9 @@
+package controller;
+
+import entity.Epic;
+import entity.SubTask;
+import entity.Task;
+
 import java.util.List;
 
 /**
@@ -5,9 +11,9 @@ import java.util.List;
  */
 public class TasksTaskManager implements TaskManager {
 
-    static TaskController taskController = new TaskController();
-    static EpicController epicController = new EpicController();
-    static SubTaskController subTaskController = new SubTaskController(epicController);
+    TaskController taskController = new TaskController();
+    EpicController epicController = new EpicController();
+    SubTaskController subTaskController = new SubTaskController(epicController);
 
     // получение списка всех задач
     @Override

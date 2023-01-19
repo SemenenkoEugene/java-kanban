@@ -1,3 +1,5 @@
+package entity;
+
 import java.util.Objects;
 
 /**
@@ -10,31 +12,24 @@ public class Task {
     protected String description;
     protected Integer id;
     protected Status status;
-    protected String type;
 
-    public Task() {
-        this("", null, -1, Status.NEW);
+
+    public Task(String name, String description, Integer id, Status status) {
+        this.name = name;
+        this.description = description;
+        this.status = status;
+    }
+
+    public Task(String name, String description, Status status) {
+        this.name = name;
+        this.description = description;
+        this.status = status;
     }
 
     public Task(String name, String description, Integer id) {
         this.name = name;
         this.description = description;
         this.id = id;
-    }
-
-    public Task(String name, String description, Integer id, Status status) {
-        this.name = name;
-        this.description = description;
-        this.id = id;
-        this.status = status;
-    }
-
-    public Task(String type, String name, String description, Integer id, Status status) {
-        this.type = type;
-        this.name = name;
-        this.description = description;
-        this.id = id;
-        this.status = status;
     }
 
     public String getName() {
@@ -69,14 +64,6 @@ public class Task {
         this.status = status;
     }
 
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -85,13 +72,12 @@ public class Task {
         return Objects.equals(name, task.name)
                 && Objects.equals(description, task.description)
                 && Objects.equals(id, task.id)
-                && status == task.status
-                && Objects.equals(type, task.type);
+                && status == task.status;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, description, id, status, type);
+        return Objects.hash(name, description, id, status);
     }
 
     @Override
@@ -101,7 +87,6 @@ public class Task {
                 ", description='" + description + '\'' +
                 ", id=" + id +
                 ", status=" + status +
-                ", type='" + type + '\'' +
                 '}';
     }
 }

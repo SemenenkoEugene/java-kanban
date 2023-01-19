@@ -1,3 +1,5 @@
+package entity;
+
 import java.util.ArrayList;
 
 /**
@@ -8,16 +10,16 @@ public class Epic extends Task {
 
     private ArrayList<SubTask> subTasks = new ArrayList<>();
 
-    public Epic(String type, String name, String description, Integer id, Status status) {
-        super(type, name, description, id, status);
+    public Epic(String name, String description, Integer id, Status status) {
+        super(name, description, id, status);
     }
 
-    public Epic(String name, String description, Integer id) {
-        super(name, description, id);
+    public Epic(String name, String description, Status status) {
+        super(name, description, status);
     }
 
     public ArrayList<SubTask> getSubTasks() {
-        return subTasks;
+        return new ArrayList<>(subTasks);
     }
 
     public void setSubTasks(ArrayList<SubTask> subTasks) {

@@ -1,3 +1,9 @@
+package controller;
+
+import entity.Epic;
+import entity.Status;
+import entity.SubTask;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -5,7 +11,7 @@ public class SubTaskController {
 
     private HashMap<Integer, SubTask> subTasks = new HashMap<>();
     private Integer counterIdSubTasks = 0;
-    EpicController epicController;
+    private EpicController epicController;
 
     public HashMap<Integer, SubTask> getSubTasks() {
         return subTasks;
@@ -17,7 +23,7 @@ public class SubTaskController {
 
     // получение списка всех подзадач определенного эпика
     public ArrayList<SubTask> getListAllTasksOfEpic(Epic epic) {
-        return epicController.epics.get(epic.getId()).getSubTasks();
+        return epicController.getEpicById(epic.getId()).getSubTasks();
     }
 
     // удаление всех подзадач
@@ -32,12 +38,14 @@ public class SubTaskController {
 
     // создание новой подзадачи
     public SubTask createSubTask(SubTask subTask, Epic epic) {
+
         SubTask newSubTask = new SubTask(
-                subTask.getType(), subTask.getName(), subTask.getDescription(),
-                ++counterIdSubTasks, subTask.getStatus(), subTask.getEpicId());
+                subTask.getName(), subTask.getDescription(),
+                subTask.getStatus(), subTask.getEpicId());
         if (!subTasks.containsKey(newSubTask.getId())) {
             subTasks.put(newSubTask.getId(), newSubTask);
-            epicController.epics.get(epic.getId()).getSubTasks().add(newSubTask);
+            epicController.getEpicById(epic.getId()).getSubTasks().add(newSubTask);
+            subTask.setStatus(Status.NEW);
         } else {
             System.out.println("Подзадача с таким Id уже существует");
             return null;
@@ -55,15 +63,15 @@ public class SubTaskController {
         updateSubTask.setDescription(subTask.getDescription());
         updateSubTask.setName(subTask.getName());
         updateSubTask.setStatus(subTask.getStatus());
-        epicController.epics.get(subTask.getEpicId()).getSubTasks().remove(updateSubTask);
-        epicController.epics.get(subTask.getEpicId()).getSubTasks().add(subTask);
+        epicController.getEpicById(subTask.getEpicId()).getSubTasks().remove(updateSubTask);
+        epicController.getEpicById(subTask.getEpicId()).getSubTasks().add(subTask);
         refreshStatus(subTask);
         return updateSubTask;
     }
 
     // обновление статуса эпика в зависимости от статуса подзадачи
     public void refreshStatus(SubTask subTask) {
-        ArrayList<SubTask> subTaskOfStatusEpic = epicController.epics.get(subTask.getEpicId()).getSubTasks();
+        ArrayList<SubTask> subTaskOfStatusEpic = epicController.getEpicById(subTask.getEpicId()).getSubTasks();
         int counterNew = 0;
         int counterDone = 0;
         for (SubTask task : subTaskOfStatusEpic) {
@@ -74,19 +82,20 @@ public class SubTaskController {
             }
         }
         if (counterNew == subTaskOfStatusEpic.size()) {
-            epicController.epics.get(subTask.getEpicId()).setStatus(Status.NEW);
+            epicController.getEpicById(subTask.getEpicId()).setStatus(Status.NEW);
         } else if (counterDone == subTaskOfStatusEpic.size()) {
-            epicController.epics.get(subTask.getEpicId()).setStatus(Status.DONE);
+            epicController.getEpicById(subTask.getEpicId()).setStatus(Status.DONE);
         } else {
-            epicController.epics.get(subTask.getEpicId()).setStatus(Status.IN_PROGRESS);
+            epicController.getEpicById(subTask.getEpicId()).setStatus(Status.IN_PROGRESS);
         }
     }
 
     // удаление подзадачи по Id
     public SubTask deleteSubTaskById(Integer id) {
         SubTask deleteSubTask = subTasks.get(id);
-        epicController.epics.get(deleteSubTask.getEpicId()).getSubTasks().remove(deleteSubTask);
+        epicController.getEpicById(deleteSubTask.getEpicId()).getSubTasks().remove(deleteSubTask);
         subTasks.remove(id);
+        epicController.updateEpicById(epicController.getEpicById(id));
         return deleteSubTask;
     }
 }

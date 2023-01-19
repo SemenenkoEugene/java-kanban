@@ -1,3 +1,5 @@
+package entity;
+
 import java.util.Objects;
 
 /**
@@ -8,8 +10,8 @@ public class SubTask extends Task {
 
     private Integer epicId;
 
-    public SubTask(String type, String name, String description, Integer id, Status status, Integer epicId) {
-        super(type, name, description, id, status);
+    public SubTask(String name, String description,  Status status, Integer epicId) {
+        super(name, description, status);
         this.epicId = epicId;
     }
 
@@ -48,7 +50,6 @@ public class SubTask extends Task {
                 ", description='" + description + '\'' +
                 ", id=" + id +
                 ", status=" + status +
-                ", type='" + type + '\'' +
                 '}';
     }
 }
