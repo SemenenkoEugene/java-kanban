@@ -107,8 +107,8 @@ public class TasksTaskManager implements TaskManager {
 
     // удаление подзадачи по Id
     @Override
-    public SubTask deleteSubTaskById(Integer id) {
-        return subTaskController.deleteSubTaskById(id);
+    public void deleteSubTaskById(Integer id) {
+        subTaskController.deleteSubTaskById(id);
     }
 
     // удаление эпика по Id

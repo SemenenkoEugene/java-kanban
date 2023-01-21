@@ -54,7 +54,7 @@ public interface TaskManager {
     void deleteAllEpics();
 
     // удаление подзадачи по Id
-    SubTask deleteSubTaskById(Integer id);
+    void deleteSubTaskById(Integer id);
 
     // удаление эпика по Id
     void deleteEpicById(Integer id);
