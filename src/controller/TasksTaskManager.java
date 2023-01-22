@@ -4,6 +4,7 @@ import entity.Epic;
 import entity.SubTask;
 import entity.Task;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -14,6 +15,7 @@ public class TasksTaskManager implements TaskManager {
     TaskController taskController = new TaskController();
     EpicController epicController = new EpicController();
     SubTaskController subTaskController = new SubTaskController(epicController);
+
 
     // получение списка всех задач
     @Override
@@ -31,6 +33,12 @@ public class TasksTaskManager implements TaskManager {
     @Override
     public List<SubTask> getListAllTasksOfEpic(Epic epic) {
         return subTaskController.getListAllTasksOfEpic(epic);
+    }
+
+    //получение списка всех подзадач
+    @Override
+    public ArrayList<SubTask> getListSubTasks() {
+        return subTaskController.getListSubTasks();
     }
 
     // получение подзадачи по Id
@@ -59,8 +67,8 @@ public class TasksTaskManager implements TaskManager {
 
     // создание новой подзадачи
     @Override
-    public SubTask createSubTask(SubTask subTask, Epic epic) {
-        return subTaskController.createSubTask(subTask, epic);
+    public SubTask createSubTask(SubTask subTask) {
+        return subTaskController.createSubTask(subTask);
     }
 
     //создание нового эпика
@@ -77,8 +85,8 @@ public class TasksTaskManager implements TaskManager {
 
     // обновление подзадачи по Id
     @Override
-    public SubTask updateSubTaskById(SubTask subTask) {
-        return subTaskController.updateSubTaskById(subTask);
+    public void updateSubTaskById(SubTask subTask) {
+        subTaskController.updateSubTaskById(subTask);
     }
 
     // обновление эпика

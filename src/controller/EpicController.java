@@ -10,10 +10,6 @@ public class EpicController {
     private HashMap<Integer, Epic> epics = new HashMap<>();
     private int counterIdEpics = 0;
 
-    public HashMap<Integer, Epic> getEpics() {
-        return epics;
-    }
-
     // получение списка всех эпиков
     public ArrayList<Epic> getListAllEpic() {
         return new ArrayList<>(epics.values());
@@ -44,4 +40,6 @@ public class EpicController {
     public void deleteEpicById(Integer id) {
         epics.remove(id);
     }
+
+
 }
