@@ -25,10 +25,10 @@ public class Epic extends Task {
     }
 
     // метод определения статуса эпика в зависимости от статуса подзадачи
-    private void checkStatusEpic(ArrayList<SubTask> subTaskArrayList) {
-        if (subTaskArrayList.isEmpty() || isStatus(subTaskArrayList, Status.NEW)) {
+    private void checkStatusEpic() {
+        if (subTasks.isEmpty() || isStatus(subTasks, Status.NEW)) {
             status = Status.NEW;
-        } else if (isStatus(subTaskArrayList, Status.DONE)) {
+        } else if (isStatus(subTasks, Status.DONE)) {
             status = Status.DONE;
         } else {
             status = Status.IN_PROGRESS;
@@ -37,7 +37,7 @@ public class Epic extends Task {
 
     public void setSubTasks(ArrayList<SubTask> subTasks) {
         this.subTasks = subTasks;
-        checkStatusEpic(subTasks);
+        checkStatusEpic();
     }
 
     @Override
