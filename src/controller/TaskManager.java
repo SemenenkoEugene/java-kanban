@@ -66,4 +66,7 @@ public interface TaskManager {
     // удаление задачи по Id
     Task deleteTaskById(Integer id);
 
+    // Получение истории
+    List<Task> getHistory();
+
 }

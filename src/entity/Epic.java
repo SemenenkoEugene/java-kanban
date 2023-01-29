@@ -35,6 +35,22 @@ public class Epic extends Task {
         }
     }
 
+    public void addSubTask(SubTask subTask){
+        for (SubTask task : subTasks) {
+            if(task.getId().equals(subTask.getId())) {
+                subTasks.remove(task);
+                break;
+            }
+        }
+        subTasks.add(subTask);
+        checkStatusEpic();
+    }
+
+    public void removeSubTask(SubTask subTask){
+        subTasks.remove(subTask);
+        checkStatusEpic();
+    }
+
     public void setSubTasks(ArrayList<SubTask> subTasks) {
         this.subTasks = subTasks;
         checkStatusEpic();

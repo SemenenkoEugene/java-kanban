@@ -10,12 +10,12 @@ import java.util.List;
 /**
  * класс содержит список методов для всех типов задач
  */
-public class TasksTaskManager implements TaskManager {
+public class InMemoryTaskManager implements TaskManager {
 
-    TaskController taskController = new TaskController();
-    EpicController epicController = new EpicController();
-    SubTaskController subTaskController = new SubTaskController(epicController);
-
+    private final TaskController taskController = new TaskController();
+    private final EpicController epicController = new EpicController();
+    private final SubTaskController subTaskController = new SubTaskController(epicController);
+    private final HistoryManager historyManager = Managers.getDefaultHistory();
 
     // получение списка всех задач
     @Override
@@ -44,18 +44,21 @@ public class TasksTaskManager implements TaskManager {
     // получение подзадачи по Id
     @Override
     public SubTask getSubTaskById(Integer id) {
+        historyManager.add(subTaskController.getSubTaskById(id));
         return subTaskController.getSubTaskById(id);
     }
 
     // получение задачи по Id
     @Override
     public Task getTaskById(Integer id) {
+        historyManager.add(taskController.getTaskById(id));
         return taskController.getTaskById(id);
     }
 
     // получение эпика по Id
     @Override
     public Epic getEpicById(Integer id) {
+        historyManager.add(epicController.getEpicById(id));
         return epicController.getEpicById(id);
     }
 
@@ -129,5 +132,11 @@ public class TasksTaskManager implements TaskManager {
     @Override
     public Task deleteTaskById(Integer id) {
         return taskController.deleteTaskById(id);
+    }
+
+    // получение истории
+    @Override
+    public List<Task> getHistory() {
+        return historyManager.getHistory();
     }
 }

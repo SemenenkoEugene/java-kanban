@@ -8,9 +8,9 @@ import java.util.HashMap;
 
 public class SubTaskController {
 
-    private HashMap<Integer, SubTask> subTasks = new HashMap<>();
+    private final HashMap<Integer, SubTask> subTasks = new HashMap<>();
     private int counterIdSubTasks = 0;
-    private EpicController epicController;
+    private final EpicController epicController;
 
     public SubTaskController(EpicController epicController) {
         this.epicController = epicController;
@@ -60,13 +60,15 @@ public class SubTaskController {
     // удаление подзадачи по Id
     public void deleteSubTaskById(Integer id) {
         SubTask deleteSubTask = subTasks.get(id);
-        subTasks.remove(deleteSubTask);
-        updateEpic(deleteSubTask);
+        subTasks.remove(deleteSubTask.getId());
+        //updateEpic(deleteSubTask);
+        Epic epicById = epicController.getEpicById(deleteSubTask.getEpicId());
+        epicById.removeSubTask(deleteSubTask);
     }
 
     private void updateEpic(SubTask subTask) {
         Epic epicById = epicController.getEpicById(subTask.getEpicId());
-        epicById.setSubTasks(getListAllTasksOfEpic(epicById));
-        epicController.updateEpicById(epicById);
+        epicById.addSubTask(subTask);
+        //epicController.updateEpicById(epicById);
     }
 }
