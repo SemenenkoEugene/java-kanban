@@ -4,14 +4,16 @@ import entity.Task;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class TaskController {
 
-    private HashMap<Integer, Task> tasks = new HashMap<>();
+    private Map<Integer, Task> tasks = new HashMap<>();
     private int counterIdTasks = 0;
 
     // получение списка всех задач
-    public ArrayList<Task> getListAllTasks() {
+    public List<Task> getListAllTasks() {
         return new ArrayList<>(tasks.values());
     }
 

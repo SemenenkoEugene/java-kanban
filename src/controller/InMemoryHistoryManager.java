@@ -8,10 +8,11 @@ import java.util.List;
 public class InMemoryHistoryManager implements HistoryManager {
 
     private final List<Task> listTasks = new LinkedList<>();
+    private static final int CAPACITY = 10;
 
     @Override
     public void add(Task task) {
-        if (listTasks.size() == 10) {
+        if (listTasks.size() == CAPACITY) {
             listTasks.remove(0);
         }
         listTasks.add(task);

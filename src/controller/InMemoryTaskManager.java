@@ -4,7 +4,6 @@ import entity.Epic;
 import entity.SubTask;
 import entity.Task;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -37,28 +36,34 @@ public class InMemoryTaskManager implements TaskManager {
 
     //получение списка всех подзадач
     @Override
-    public ArrayList<SubTask> getListSubTasks() {
+    public List<SubTask> getListSubTasks() {
         return subTaskController.getListSubTasks();
     }
 
     // получение подзадачи по Id
     @Override
     public SubTask getSubTaskById(Integer id) {
-        historyManager.add(subTaskController.getSubTaskById(id));
+        if (subTaskController.getSubTaskById(id) != null) {
+            historyManager.add(subTaskController.getSubTaskById(id));
+        }
         return subTaskController.getSubTaskById(id);
     }
 
     // получение задачи по Id
     @Override
     public Task getTaskById(Integer id) {
-        historyManager.add(taskController.getTaskById(id));
+        if (taskController.getTaskById(id) != null) {
+            historyManager.add(taskController.getTaskById(id));
+        }
         return taskController.getTaskById(id);
     }
 
     // получение эпика по Id
     @Override
     public Epic getEpicById(Integer id) {
-        historyManager.add(epicController.getEpicById(id));
+        if (epicController.getEpicById(id) != null) {
+            historyManager.add(epicController.getEpicById(id));
+        }
         return epicController.getEpicById(id);
     }
 

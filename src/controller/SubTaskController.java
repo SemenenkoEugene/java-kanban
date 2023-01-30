@@ -5,10 +5,12 @@ import entity.SubTask;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class SubTaskController {
 
-    private final HashMap<Integer, SubTask> subTasks = new HashMap<>();
+    private final Map<Integer, SubTask> subTasks = new HashMap<>();
     private int counterIdSubTasks = 0;
     private final EpicController epicController;
 
@@ -17,8 +19,8 @@ public class SubTaskController {
     }
 
     // получение списка всех подзадач определенного эпика
-    public ArrayList<SubTask> getListAllTasksOfEpic(Epic epic) {
-        ArrayList<SubTask> result = new ArrayList<>();
+    public List<SubTask> getListAllTasksOfEpic(Epic epic) {
+        List<SubTask> result = new ArrayList<>();
         for (SubTask subTask : subTasks.values()) {
             if (subTask.getEpicId().equals(epic.getId())) {
                 result.add(subTask);
@@ -28,7 +30,7 @@ public class SubTaskController {
     }
 
     // получение списка всех подзадач
-    public ArrayList<SubTask> getListSubTasks() {
+    public List<SubTask> getListSubTasks() {
         return new ArrayList<>(subTasks.values());
     }
 
@@ -61,7 +63,6 @@ public class SubTaskController {
     public void deleteSubTaskById(Integer id) {
         SubTask deleteSubTask = subTasks.get(id);
         subTasks.remove(deleteSubTask.getId());
-        //updateEpic(deleteSubTask);
         Epic epicById = epicController.getEpicById(deleteSubTask.getEpicId());
         epicById.removeSubTask(deleteSubTask);
     }
@@ -69,6 +70,5 @@ public class SubTaskController {
     private void updateEpic(SubTask subTask) {
         Epic epicById = epicController.getEpicById(subTask.getEpicId());
         epicById.addSubTask(subTask);
-        //epicController.updateEpicById(epicById);
     }
 }

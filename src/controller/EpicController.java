@@ -4,14 +4,16 @@ import entity.Epic;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class EpicController {
 
-    private HashMap<Integer, Epic> epics = new HashMap<>();
+    private Map<Integer, Epic> epics = new HashMap<>();
     private int counterIdEpics = 0;
 
     // получение списка всех эпиков
-    public ArrayList<Epic> getListAllEpic() {
+    public List<Epic> getListAllEpic() {
         return new ArrayList<>(epics.values());
     }
 

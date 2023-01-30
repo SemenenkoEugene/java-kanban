@@ -4,7 +4,6 @@ import entity.Epic;
 import entity.SubTask;
 import entity.Task;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public interface TaskManager {
@@ -19,7 +18,7 @@ public interface TaskManager {
     List<SubTask> getListAllTasksOfEpic(Epic epic);
 
     //получение списка всех подзадач
-    ArrayList<SubTask> getListSubTasks();
+    List<SubTask> getListSubTasks();
 
     // получение подзадачи по Id
     SubTask getSubTaskById(Integer id);

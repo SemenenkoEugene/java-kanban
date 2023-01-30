@@ -1,6 +1,7 @@
 package entity;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -9,13 +10,13 @@ import java.util.Objects;
 
 public class Epic extends Task {
 
-    private ArrayList<SubTask> subTasks = new ArrayList<>();
+    private List<SubTask> subTasks = new ArrayList<>();
 
     public Epic(String name, String description) {
         super(name, description);
     }
 
-    private boolean isStatus(ArrayList<SubTask> tasks, Status status) {
+    private boolean isStatus(List<SubTask> tasks, Status status) {
         for (SubTask task : tasks) {
             if (!task.getStatus().equals(status)) {
                 return false;
@@ -51,7 +52,7 @@ public class Epic extends Task {
         checkStatusEpic();
     }
 
-    public void setSubTasks(ArrayList<SubTask> subTasks) {
+    public void setSubTasks(List<SubTask> subTasks) {
         this.subTasks = subTasks;
         checkStatusEpic();
     }
