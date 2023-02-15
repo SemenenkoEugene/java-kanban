@@ -9,7 +9,7 @@ import java.util.Map;
 
 public class EpicController {
 
-    private Map<Integer, Epic> epics = new HashMap<>();
+    private final Map<Integer, Epic> epics = new HashMap<>();
     private int counterIdEpics = 0;
 
     // получение списка всех эпиков

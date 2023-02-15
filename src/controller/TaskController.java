@@ -9,7 +9,7 @@ import java.util.Map;
 
 public class TaskController {
 
-    private Map<Integer, Task> tasks = new HashMap<>();
+    private final Map<Integer, Task> tasks = new HashMap<>();
     private int counterIdTasks = 0;
 
     // получение списка всех задач

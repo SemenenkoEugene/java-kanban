@@ -8,7 +8,7 @@ import java.util.Objects;
 
 public class SubTask extends Task {
 
-    private Integer epicId;
+    private final Integer epicId;
 
     public SubTask(String name, String description, Integer epicId) {
         super(name, description);
