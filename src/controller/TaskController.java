@@ -1,6 +1,7 @@
 package controller;
 
 import entity.Task;
+import utility.GeneratedID;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -10,7 +11,6 @@ import java.util.Map;
 public class TaskController {
 
     private final Map<Integer, Task> tasks = new HashMap<>();
-    private int counterIdTasks = 0;
 
     // получение списка всех задач
     public List<Task> getListAllTasks() {
@@ -29,7 +29,7 @@ public class TaskController {
 
     // создание новой задачи
     public Task createTask(Task task) {
-        task.setId(++counterIdTasks);
+        task.setId(new GeneratedID().getId());
         return tasks.put(task.getId(),task);
     }
 
@@ -39,9 +39,7 @@ public class TaskController {
     }
 
     // удаление задачи по Id
-    public Task deleteTaskById(Integer id) {
-        Task deleteTask = tasks.get(id);
+    public void deleteTaskById(Integer id) {
         tasks.remove(id);
-        return deleteTask;
     }
 }

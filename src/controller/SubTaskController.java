@@ -2,6 +2,7 @@ package controller;
 
 import entity.Epic;
 import entity.SubTask;
+import utility.GeneratedID;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -11,8 +12,9 @@ import java.util.Map;
 public class SubTaskController {
 
     private final Map<Integer, SubTask> subTasks = new HashMap<>();
-    private int counterIdSubTasks = 0;
     private final EpicController epicController;
+
+
 
     public SubTaskController(EpicController epicController) {
         this.epicController = epicController;
@@ -46,7 +48,7 @@ public class SubTaskController {
 
     // создание новой подзадачи
     public SubTask createSubTask(SubTask subTask) {
-        subTask.setId(++counterIdSubTasks);
+        subTask.setId(new GeneratedID().getId());
         subTasks.put(subTask.getId(), subTask);
         updateEpic(subTask);
         return subTask;

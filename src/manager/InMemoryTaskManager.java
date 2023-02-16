@@ -1,5 +1,6 @@
-package controller;
+package manager;
 
+import controller.*;
 import entity.Epic;
 import entity.SubTask;
 import entity.Task;
@@ -43,8 +44,9 @@ public class InMemoryTaskManager implements TaskManager {
     // получение подзадачи по Id
     @Override
     public SubTask getSubTaskById(Integer id) {
-        if (subTaskController.getSubTaskById(id) != null) {
-            historyManager.add(subTaskController.getSubTaskById(id));
+        SubTask subTaskById = subTaskController.getSubTaskById(id);
+        if (subTaskById != null) {
+            historyManager.add(subTaskById);
         }
         return subTaskController.getSubTaskById(id);
     }
@@ -52,8 +54,9 @@ public class InMemoryTaskManager implements TaskManager {
     // получение задачи по Id
     @Override
     public Task getTaskById(Integer id) {
-        if (taskController.getTaskById(id) != null) {
-            historyManager.add(taskController.getTaskById(id));
+        Task taskById = taskController.getTaskById(id);
+        if (taskById != null) {
+            historyManager.add(taskById);
         }
         return taskController.getTaskById(id);
     }
@@ -61,8 +64,9 @@ public class InMemoryTaskManager implements TaskManager {
     // получение эпика по Id
     @Override
     public Epic getEpicById(Integer id) {
-        if (epicController.getEpicById(id) != null) {
-            historyManager.add(epicController.getEpicById(id));
+        Epic epicById = epicController.getEpicById(id);
+        if (epicById != null) {
+            historyManager.add(epicById);
         }
         return epicController.getEpicById(id);
     }
@@ -125,18 +129,21 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public void deleteSubTaskById(Integer id) {
         subTaskController.deleteSubTaskById(id);
+        historyManager.remove(id);
     }
 
     // удаление эпика по Id
     @Override
     public void deleteEpicById(Integer id) {
         epicController.deleteEpicById(id);
+        historyManager.remove(id);
     }
 
     // удаление задачи по Id
     @Override
-    public Task deleteTaskById(Integer id) {
-        return taskController.deleteTaskById(id);
+    public void deleteTaskById(Integer id) {
+        taskController.deleteTaskById(id);
+        historyManager.remove(id);
     }
 
     // получение истории

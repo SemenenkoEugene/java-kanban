@@ -1,6 +1,7 @@
 package controller;
 
 import entity.Epic;
+import utility.GeneratedID;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -10,7 +11,6 @@ import java.util.Map;
 public class EpicController {
 
     private final Map<Integer, Epic> epics = new HashMap<>();
-    private int counterIdEpics = 0;
 
     // получение списка всех эпиков
     public List<Epic> getListAllEpic() {
@@ -29,7 +29,7 @@ public class EpicController {
 
     //создание нового эпика
     public Epic createEpic(Epic epic) {
-        epic.setId(++counterIdEpics);
+        epic.setId(new GeneratedID().getId());
         return epics.put(epic.getId(),epic);
     }
 

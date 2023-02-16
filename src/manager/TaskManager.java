@@ -1,4 +1,4 @@
-package controller;
+package manager;
 
 import entity.Epic;
 import entity.SubTask;
@@ -63,7 +63,7 @@ public interface TaskManager {
     void deleteEpicById(Integer id);
 
     // удаление задачи по Id
-    Task deleteTaskById(Integer id);
+    void deleteTaskById(Integer id);
 
     // Получение истории
     List<Task> getHistory();
