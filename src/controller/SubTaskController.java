@@ -48,7 +48,7 @@ public class SubTaskController {
 
     // создание новой подзадачи
     public SubTask createSubTask(SubTask subTask) {
-        subTask.setId(new GeneratedID().getId());
+        subTask.setId(GeneratedID.getId());
         subTasks.put(subTask.getId(), subTask);
         updateEpic(subTask);
         return subTask;

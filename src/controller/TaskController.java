@@ -29,7 +29,7 @@ public class TaskController {
 
     // создание новой задачи
     public Task createTask(Task task) {
-        task.setId(new GeneratedID().getId());
+        task.setId(GeneratedID.getId());
         return tasks.put(task.getId(),task);
     }
 

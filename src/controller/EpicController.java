@@ -29,7 +29,7 @@ public class EpicController {
 
     //создание нового эпика
     public Epic createEpic(Epic epic) {
-        epic.setId(new GeneratedID().getId());
+        epic.setId(GeneratedID.getId());
         return epics.put(epic.getId(),epic);
     }
 
