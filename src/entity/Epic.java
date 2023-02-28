@@ -16,6 +16,11 @@ public class Epic extends Task {
         super(name, description);
     }
 
+    public Epic(String name, String description, Status status) {
+        super(name, description, status);
+
+    }
+
     private boolean isStatus(List<SubTask> tasks, Status status) {
         for (SubTask task : tasks) {
             if (!task.getStatus().equals(status)) {
@@ -36,9 +41,9 @@ public class Epic extends Task {
         }
     }
 
-    public void addSubTask(SubTask subTask){
+    public void addSubTask(SubTask subTask) {
         for (SubTask task : subTasks) {
-            if(task.getId().equals(subTask.getId())) {
+            if (task.getId().equals(subTask.getId())) {
                 subTasks.remove(task);
                 break;
             }
@@ -47,7 +52,7 @@ public class Epic extends Task {
         checkStatusEpic();
     }
 
-    public void removeSubTask(SubTask subTask){
+    public void removeSubTask(SubTask subTask) {
         subTasks.remove(subTask);
         checkStatusEpic();
     }

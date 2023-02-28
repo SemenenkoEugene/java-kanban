@@ -151,4 +151,20 @@ public class InMemoryTaskManager implements TaskManager {
     public List<Task> getHistory() {
         return historyManager.getHistory();
     }
+
+    public void addToHistory(int id) {
+        if (epicController.getEpicById(id) != null) {
+            historyManager.add(epicController.getEpicById(id));
+        } else if (subTaskController.getSubTaskById(id) != null) {
+            historyManager.add(subTaskController.getSubTaskById(id));
+        } else if (taskController.getTaskById(id) != null) {
+            historyManager.add(taskController.getTaskById(id));
+        }
+    }
+
+    public HistoryManager getHistoryManager() {
+        return historyManager;
+    }
+
+
 }
