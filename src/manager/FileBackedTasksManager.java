@@ -9,7 +9,13 @@ import java.util.List;
 
 public class FileBackedTasksManager extends InMemoryTaskManager implements TaskManager {
 
-    private File file;
+    private final File file;
+    private HistoryManager historyManager;
+
+    public FileBackedTasksManager(File file, HistoryManager historyManager) {
+        this.file = file;
+        this.historyManager = historyManager;
+    }
 
     public FileBackedTasksManager(File file) {
         this.file = file;
@@ -17,19 +23,27 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements TaskM
 
     /**
      * метод восстановления данных менеджера из файла при запуске программы
+     *
      * @param file путь до файла
      */
     public void loadFromFile(File file) {
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(file, StandardCharsets.UTF_8))) {
-            String line = bufferedReader.readLine();
+            bufferedReader.readLine();
             while (bufferedReader.ready()) {
+                String line = bufferedReader.readLine();
+                if (line.isBlank()){
+                    break;
+                }
                 Task task = fromString(line);
                 if (task instanceof Epic) {
                     addEpic((Epic) task);
                 } else if (task instanceof SubTask) {
                     addSubTask((SubTask) task);
-                } else {
+                } else if (task != null){
                     addTask(task);
+                } else {
+                    System.out.println("Это не задача");
+
                 }
             }
             String historyLine = bufferedReader.readLine();
@@ -46,7 +60,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements TaskM
      */
     public void save() {
         try (FileWriter fileWriter = new FileWriter(file, StandardCharsets.UTF_8)) {
-            fileWriter.write("id,type,name,status,description,epic");
+            fileWriter.write("id,type,name,status,description,epic" + "\n");
 
             for (Task task : getListAllTasks()) {
                 fileWriter.write(toString(task) + "\n");
@@ -70,7 +84,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements TaskM
      * метод сохранения менеджера истории в файл
      *
      * @param manager
-     * @return  строковое представление менеджера истории
+     * @return строковое представление менеджера истории
      */
     static String historyToString(HistoryManager manager) {
         List<Task> history = manager.getHistory();
@@ -161,20 +175,24 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements TaskM
      */
     private static Task fromString(String value) {
         String[] values = value.split(",");
-        if (values[1].equals("EPIC")) {
-            Epic epic = new Epic(values[2], values[4], Status.valueOf(values[3].toUpperCase()));
-            epic.setId(Integer.parseInt(values[0]));
-            epic.setStatus(Status.valueOf(values[3].toUpperCase()));
-            return epic;
-        } else if (values[1].equals("SUBTASK")) {
-            SubTask subTask = new SubTask(values[2], values[4], Status.valueOf(values[3].toUpperCase()), Integer.parseInt(values[5]));
-            subTask.setId(Integer.parseInt(values[0]));
-        } else {
-            Task task = new Task(values[2], values[4], Status.valueOf(values[3].toUpperCase()));
-            task.setId(Integer.parseInt(values[0]));
-            return task;
+        switch (values[1]) {
+            case "EPIC":
+                Epic epic = new Epic(values[2], values[4], Status.valueOf(values[3].toUpperCase()));
+                epic.setId(Integer.parseInt(values[0]));
+                epic.setStatus(Status.valueOf(values[3].toUpperCase()));
+                return epic;
+            case "SUBTASK":
+                SubTask subTask = new SubTask(values[2], values[4], Status.valueOf(values[3].toUpperCase()), Integer.parseInt(values[5]));
+                subTask.setId(Integer.parseInt(values[0]));
+                return subTask;
+            case "TASK":
+                Task task = new Task(values[2], values[4], Status.valueOf(values[3].toUpperCase()));
+                task.setId(Integer.parseInt(values[0]));
+                return task;
+            default:
+                return null;
         }
-        return null;
+
     }
 
     @Override
