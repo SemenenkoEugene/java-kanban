@@ -29,19 +29,19 @@ public class EpicController {
 
     //создание нового эпика
     public Epic createEpic(Epic epic) {
-        epic.setId(GeneratedID.getId());
-        return epics.put(epic.getId(),epic);
+        if (epic.getId() == null) {
+            epic.setId(GeneratedID.getId());
+        }
+        return epics.put(epic.getId(), epic);
     }
 
     // обновление эпика
     public Epic updateEpicById(Epic epic) {
-        return epics.put(epic.getId(),epic);
+        return epics.put(epic.getId(), epic);
     }
 
     // удаление эпика по Id
     public void deleteEpicById(Integer id) {
         epics.remove(id);
     }
-
-
 }

@@ -15,39 +15,36 @@ public class Main {
     public static void main(String[] args) {
         System.out.println("Поехали!");
         Path of = Path.of("src/resources/data.csv");
-
+//
         Path path = of;
         File file = new File(String.valueOf(path));
-        FileBackedTasksManager manager = new FileBackedTasksManager(file, Managers.getDefaultHistory());
+//        FileBackedTasksManager manager = new FileBackedTasksManager(file, Managers.getDefaultHistory());
+//
+//        Task task1 = new Task("Построить дом", "Возвести стены", Status.NEW);
+//        manager.createTask(task1);
+//
+//        Task task2 = new Task("Посадить дерево", "Купить саженец", Status.NEW);
+//        manager.createTask(task2);
+//
+//        Epic epic = new Epic("Магазин", "Купить продукты", Status.NEW);
+//        manager.createEpic(epic);
+//
+//        SubTask subTask = new SubTask("Еда", "Составить список покупки еды", Status.NEW, epic.getId());
+//        manager.createSubTask(subTask);
+//
+//        manager.getTaskById(task1.getId());
+//        manager.getTaskById(task2.getId());
+//        System.out.println();
 
-        Task task1 = new Task("Построить дом", "Возвести стены", Status.NEW);
-        manager.createTask(task1);
-
-        Task task2 = new Task("Посадить дерево", "Купить саженец", Status.NEW);
-        manager.createTask(task2);
-
-        Epic epic = new Epic("Магазин", "Купить продукты", Status.NEW);
-        manager.createEpic(epic);
-
-        SubTask subTask = new SubTask("Еда", "Составить список покупки еды", Status.NEW, epic.getId());
-        manager.createSubTask(subTask);
-
-        manager.getTaskById(task1.getId());
-        manager.getTaskById(task2.getId());
+        FileBackedTasksManager manager1 = FileBackedTasksManager.loadFromFile(file);
+        manager1.getListAllEpic().forEach(System.out::println);
         System.out.println();
+        manager1.getListSubTasks().forEach(System.out::println);
+        System.out.println();
+        manager1.getListAllTasks().forEach(System.out::println);
+        System.out.println();
+        manager1.getHistory().forEach(System.out::println);
 
-        System.out.println("Считывание из файла");
-        Path path1 = of;
-        File file1 = new File(String.valueOf(path1));
-        manager.loadFromFile(file1);
-        System.out.println("Task");
-        System.out.println(manager.getListAllTasks());
-        System.out.println("Epic");
-        System.out.println(manager.getListAllEpic());
-        System.out.println("SubTask");
-        System.out.println(manager.getListSubTasks());
-        System.out.println("History");
-        System.out.println(manager.getHistory());
 
         //Спринт 5
 //        TaskManager taskManager = Managers.getDefault();

@@ -10,7 +10,8 @@ import java.util.Map;
 
 public class TaskController {
 
-    private final Map<Integer, Task> tasks = new HashMap<>();
+    protected final Map<Integer, Task> tasks = new HashMap<>();
+
 
     // получение списка всех задач
     public List<Task> getListAllTasks() {
@@ -29,13 +30,15 @@ public class TaskController {
 
     // создание новой задачи
     public Task createTask(Task task) {
-        task.setId(GeneratedID.getId());
-        return tasks.put(task.getId(),task);
+        if (task.getId() == null) {
+            task.setId(GeneratedID.getId());
+        }
+        return tasks.put(task.getId(), task);
     }
 
     // обновление задачи
     public Task updateTaskById(Task task) {
-        return tasks.put(task.getId(),task);
+        return tasks.put(task.getId(), task);
     }
 
     // удаление задачи по Id

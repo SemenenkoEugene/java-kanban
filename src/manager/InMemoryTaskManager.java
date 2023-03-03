@@ -12,10 +12,18 @@ import java.util.List;
  */
 public class InMemoryTaskManager implements TaskManager {
 
-    private final TaskController taskController = new TaskController();
-    private final EpicController epicController = new EpicController();
-    private final SubTaskController subTaskController = new SubTaskController(epicController);
-    private final HistoryManager historyManager = Managers.getDefaultHistory();
+    protected  TaskController taskController = new TaskController();
+    protected  EpicController epicController = new EpicController();
+    protected  SubTaskController subTaskController = new SubTaskController(epicController);
+    protected  HistoryManager historyManager;
+
+    public InMemoryTaskManager(HistoryManager historyManager) {
+        this.historyManager = historyManager;
+    }
+
+    public InMemoryTaskManager(){
+
+    }
 
     // получение списка всех задач
     @Override
@@ -152,7 +160,7 @@ public class InMemoryTaskManager implements TaskManager {
         return historyManager.getHistory();
     }
 
-    public void addToHistory(int id) {
+    protected void addToHistory(int id) {
         if (epicController.getEpicById(id) != null) {
             historyManager.add(epicController.getEpicById(id));
         } else if (subTaskController.getSubTaskById(id) != null) {
@@ -162,7 +170,7 @@ public class InMemoryTaskManager implements TaskManager {
         }
     }
 
-    public HistoryManager getHistoryManager() {
+    protected HistoryManager getHistoryManager() {
         return historyManager;
     }
 

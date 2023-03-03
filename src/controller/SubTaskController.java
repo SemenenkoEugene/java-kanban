@@ -15,7 +15,6 @@ public class SubTaskController {
     private final EpicController epicController;
 
 
-
     public SubTaskController(EpicController epicController) {
         this.epicController = epicController;
     }
@@ -48,7 +47,9 @@ public class SubTaskController {
 
     // создание новой подзадачи
     public SubTask createSubTask(SubTask subTask) {
-        subTask.setId(GeneratedID.getId());
+        if (subTask.getId() == null) {
+            subTask.setId(GeneratedID.getId());
+        }
         subTasks.put(subTask.getId(), subTask);
         updateEpic(subTask);
         return subTask;
