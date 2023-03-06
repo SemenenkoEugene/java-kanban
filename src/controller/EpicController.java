@@ -24,7 +24,7 @@ public class EpicController {
 
     // получение эпика по Id
     public Epic getEpicById(Integer id) {
-        return epics.get(id);
+        return epics.get(id) == null ? null : epics.get(id);
     }
 
     //создание нового эпика

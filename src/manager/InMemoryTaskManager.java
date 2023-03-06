@@ -12,17 +12,16 @@ import java.util.List;
  */
 public class InMemoryTaskManager implements TaskManager {
 
-    protected  TaskController taskController = new TaskController();
-    protected  EpicController epicController = new EpicController();
-    protected  SubTaskController subTaskController = new SubTaskController(epicController);
-    protected  HistoryManager historyManager;
+    private final TaskController taskController = new TaskController();
+    private final EpicController epicController = new EpicController();
+    private final SubTaskController subTaskController = new SubTaskController(epicController);
+    protected HistoryManager historyManager = Managers.getDefaultHistory();
 
     public InMemoryTaskManager(HistoryManager historyManager) {
         this.historyManager = historyManager;
     }
 
-    public InMemoryTaskManager(){
-
+    public InMemoryTaskManager() {
     }
 
     // получение списка всех задач
@@ -173,6 +172,4 @@ public class InMemoryTaskManager implements TaskManager {
     protected HistoryManager getHistoryManager() {
         return historyManager;
     }
-
-
 }

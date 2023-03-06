@@ -1,40 +1,41 @@
 import entity.Status;
 import manager.FileBackedTasksManager;
 import manager.Managers;
-import manager.TaskManager;
 import entity.Epic;
 import entity.SubTask;
 import entity.Task;
 
 import java.io.File;
 import java.nio.file.Path;
-import java.util.List;
 
 public class Main {
 
     public static void main(String[] args) {
         System.out.println("Поехали!");
         Path of = Path.of("src/resources/data.csv");
-//
+
         Path path = of;
         File file = new File(String.valueOf(path));
-//        FileBackedTasksManager manager = new FileBackedTasksManager(file, Managers.getDefaultHistory());
-//
-//        Task task1 = new Task("Построить дом", "Возвести стены", Status.NEW);
-//        manager.createTask(task1);
-//
-//        Task task2 = new Task("Посадить дерево", "Купить саженец", Status.NEW);
-//        manager.createTask(task2);
-//
-//        Epic epic = new Epic("Магазин", "Купить продукты", Status.NEW);
-//        manager.createEpic(epic);
-//
-//        SubTask subTask = new SubTask("Еда", "Составить список покупки еды", Status.NEW, epic.getId());
-//        manager.createSubTask(subTask);
-//
-//        manager.getTaskById(task1.getId());
-//        manager.getTaskById(task2.getId());
-//        System.out.println();
+        FileBackedTasksManager manager = new FileBackedTasksManager(file, Managers.getDefaultHistory());
+
+        Task task1 = new Task("Построить дом", "Возвести стены", Status.NEW);
+        manager.createTask(task1);
+
+        Task task2 = new Task("Посадить дерево", "Купить саженец", Status.NEW);
+        manager.createTask(task2);
+
+        Epic epic = new Epic("Магазин", "Купить продукты", Status.NEW);
+        manager.createEpic(epic);
+
+        SubTask subTask = new SubTask("Еда", "Составить список покупки еды", Status.NEW, epic.getId());
+        manager.createSubTask(subTask);
+
+        manager.getTaskById(task1.getId());
+        manager.getTaskById(task2.getId());
+        manager.getSubTaskById(subTask.getId());
+        manager.getHistory().forEach(System.out::println);
+        System.out.println();
+
 
         FileBackedTasksManager manager1 = FileBackedTasksManager.loadFromFile(file);
         manager1.getListAllEpic().forEach(System.out::println);

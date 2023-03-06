@@ -12,7 +12,6 @@ public class TaskController {
 
     protected final Map<Integer, Task> tasks = new HashMap<>();
 
-
     // получение списка всех задач
     public List<Task> getListAllTasks() {
         return new ArrayList<>(tasks.values());

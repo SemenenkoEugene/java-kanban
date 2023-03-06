@@ -14,7 +14,6 @@ public class SubTaskController {
     private final Map<Integer, SubTask> subTasks = new HashMap<>();
     private final EpicController epicController;
 
-
     public SubTaskController(EpicController epicController) {
         this.epicController = epicController;
     }

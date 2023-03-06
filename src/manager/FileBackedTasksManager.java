@@ -1,96 +1,68 @@
 package manager;
 
-import controller.EpicController;
-import controller.SubTaskController;
-import controller.TaskController;
 import entity.*;
-import utility.ConverterFile;
-import utility.GeneratedID;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
-import static utility.ConverterFile.historyFromString;
+import static utility.ConverterCSV.historyFromString;
+import static utility.ConverterCSV.historyToString;
 
 public class FileBackedTasksManager extends InMemoryTaskManager {
 
     private final File file;
-    private final ConverterFile converterFile = new ConverterFile();
 
-    int id;
-
-    public FileBackedTasksManager(
-            File file,
-            TaskController taskController,
-            EpicController epicController,
-            SubTaskController subTaskController,
-            HistoryManager historyManager,
-            int id
-    ) {
+    public FileBackedTasksManager(File file, HistoryManager historyManager) {
+        super(historyManager);
         this.file = file;
-        this.taskController = taskController;
-        this.epicController = epicController;
-        this.subTaskController = subTaskController;
-        this.historyManager = historyManager;
-        this.id = id;
+    }
+
+    public FileBackedTasksManager(File file) {
+        super();
+        this.file = file;
     }
 
     /**
-     * метод восстановления данных менеджера из файла при запуске программы
+     * метод восстановления данных менеджера из файла
      *
      * @param file путь до файла
      */
     public static FileBackedTasksManager loadFromFile(File file) {
 
-        Map<Integer, Task> allTaskMap = new HashMap<>();
-        TaskController taskController1 = new TaskController();
-        EpicController epicController1 = new EpicController();
-        SubTaskController subTaskController1 = new SubTaskController(epicController1);
-        HistoryManager historyManager1 = new InMemoryHistoryManager();
-        int id = 0;
+        FileBackedTasksManager tasksManager = new FileBackedTasksManager(file);
 
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(file, StandardCharsets.UTF_8))) {
+
             bufferedReader.readLine();
             while (bufferedReader.ready()) {
                 String line = bufferedReader.readLine();
                 if (line.isBlank()) {
                     break;
                 }
+
                 Task task = fromString(line);
-                if (task != null) {
-                    if (task.getId() > id) {
-                        id = task.getId();
-                    }
-                    allTaskMap.put(task.getId(), task);
 
-                    if (task instanceof Epic) {
-                        epicController1.createEpic((Epic) task);
-
-                    } else if (task instanceof SubTask) {
-                        subTaskController1.createSubTask((SubTask) task);
-
-                    } else {
-                        taskController1.createTask(task);
-                    }
+                if (task instanceof Epic) {
+                    tasksManager.addEpic((Epic) task);
+                } else if (task instanceof SubTask) {
+                    tasksManager.addSubTask((SubTask) task);
+                } else if (task != null) {
+                    tasksManager.addTask(task);
+                } else {
+                    System.out.println("Это не задача");
                 }
             }
 
             String historyLine = bufferedReader.readLine();
-            List<Integer> history = historyFromString(historyLine);
 
-            for (Integer integer : history) {
-                if (allTaskMap.get(integer) != null) {
-                    historyManager1.add(allTaskMap.get(integer));
-                }
+            for (Integer id : historyFromString(historyLine)) {
+                tasksManager.addToHistory(id);
             }
 
         } catch (IOException e) {
-            throw new ManagerSaveException("Не удалось прочитать данные из файла!");
+            throw new ManagerSaveException("Не удалось прочитать данные из файла", e);
         }
-        return new FileBackedTasksManager(file, taskController1, epicController1, subTaskController1, historyManager1, id);
+        return tasksManager;
     }
 
     /**
@@ -98,7 +70,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
      */
     public void save() {
         try (FileWriter fileWriter = new FileWriter(file, StandardCharsets.UTF_8)) {
-            fileWriter.write("id,type,name,status,description,epic" + "\n");
+            fileWriter.write("id,type,name,status,description,epic\n");
 
             for (Task task : getListAllTasks()) {
                 fileWriter.write(toString(task) + "\n");
@@ -112,9 +84,9 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
                 fileWriter.write(toString(subTask) + "\n");
             }
             fileWriter.write("\n");
-            fileWriter.write(converterFile.historyToString(getHistoryManager()));
+            fileWriter.write(historyToString(getHistoryManager()));
         } catch (IOException e) {
-            throw new ManagerSaveException("Ошибка, файл не записался!");
+            throw new ManagerSaveException("Ошибка, файл не записался!", e);
         }
     }
 
@@ -153,7 +125,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
      * метод преобразования эпика в строковое представление по его Id
      *
      * @param task
-     * @return строковое представление эпика
+     * @return строковое представление Id эпика
      */
     private String getParentEpicId(Task task) {
         if (task instanceof SubTask) {
@@ -175,7 +147,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         String name = values[2];
         String status = values[3];
         String description = values[4];
-        Integer idOfEpic = type.equals("SUBTASK") ? Integer.valueOf(values[5]) : null;
+        Integer idOfEpic = type.equals(TaskType.SUBTASK.toString()) ? Integer.valueOf(values[5]) : null;
         switch (type) {
             case "EPIC":
                 Epic epic = new Epic(name, description, Status.valueOf(status.toUpperCase()));
@@ -193,7 +165,6 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
             default:
                 return null;
         }
-
     }
 
     @Override
@@ -292,5 +263,17 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
     public void deleteTaskById(Integer id) {
         super.deleteTaskById(id);
         save();
+    }
+
+    public Task addTask(Task task) {
+        return super.createTask(task);
+    }
+
+    public Epic addEpic(Epic epic) {
+        return super.createEpic(epic);
+    }
+
+    public SubTask addSubTask(SubTask subTask) {
+        return super.createSubTask(subTask);
     }
 }
