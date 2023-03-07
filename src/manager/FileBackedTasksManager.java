@@ -1,6 +1,7 @@
 package manager;
 
 import entity.*;
+import utility.GeneratedID;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -30,6 +31,8 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
     public static FileBackedTasksManager loadFromFile(File file) {
 
         FileBackedTasksManager tasksManager = new FileBackedTasksManager(file);
+        GeneratedID generatedID = new GeneratedID();
+
 
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(file, StandardCharsets.UTF_8))) {
 
@@ -50,6 +53,11 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
                     tasksManager.addTask(task);
                 } else {
                     System.out.println("Это не задача");
+                }
+                if (task != null) {
+                    if (task.getId() > GeneratedID.getId()) {
+                        generatedID.setId(GeneratedID.getId());
+                    }
                 }
             }
 
