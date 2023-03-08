@@ -20,43 +20,43 @@ public class Main {
         File file = new File(String.valueOf(path));
         FileBackedTasksManager manager = new FileBackedTasksManager(file, Managers.getDefaultHistory());
 
-//        Task task1 = new Task("Построить дом", "Возвести стены", Status.NEW);
-//        manager.createTask(task1);
+        Task task1 = new Task("Построить дом", "Возвести стены", Status.NEW);
+        manager.createTask(task1);
+
+        Task task2 = new Task("Посадить дерево", "Купить саженец", Status.NEW);
+        manager.createTask(task2);
+
+        Epic epic = new Epic("Магазин", "Купить продукты", Status.NEW);
+        manager.createEpic(epic);
+
+        SubTask subTask = new SubTask("Еда", "Составить список покупки еды", Status.NEW, epic.getId());
+        manager.createSubTask(subTask);
+
+        manager.getTaskById(task1.getId());
+        manager.getTaskById(task2.getId());
+        manager.getSubTaskById(subTask.getId());
+        manager.getHistory().forEach(System.out::println);
+        System.out.println();
 //
-//        Task task2 = new Task("Посадить дерево", "Купить саженец", Status.NEW);
-//        manager.createTask(task2);
 //
-//        Epic epic = new Epic("Магазин", "Купить продукты", Status.NEW);
-//        manager.createEpic(epic);
-//
-//        SubTask subTask = new SubTask("Еда", "Составить список покупки еды", Status.NEW, epic.getId());
-//        manager.createSubTask(subTask);
-//
-//        manager.getTaskById(task1.getId());
-//        manager.getTaskById(task2.getId());
-//        manager.getSubTaskById(subTask.getId());
-//        manager.getHistory().forEach(System.out::println);
-//        System.out.println();
-//
-//
-//        FileBackedTasksManager manager1 = FileBackedTasksManager.loadFromFile(file);
-//        manager1.getListAllEpic().forEach(System.out::println);
-//        System.out.println();
-//        manager1.getListSubTasks().forEach(System.out::println);
-//        System.out.println();
-//        manager1.getListAllTasks().forEach(System.out::println);
-//        System.out.println();
-//        manager1.getHistory().forEach(System.out::println);
-//
-//        System.out.println("--------------");
-//
-//        Task task = new Task("new Task", "new Description", Status.NEW);
-//        manager.createTask(task);
-//        manager.getListAllTasks().forEach(System.out::println);
-//        SubTask subTask2 = new SubTask("new Subtask", "new Description", Status.NEW, epic.getId());
-//        manager.createSubTask(subTask2);
-//        manager.getListSubTasks().forEach(System.out::println);
-//        manager.getListAllEpic().forEach(System.out::println);
+        FileBackedTasksManager manager1 = FileBackedTasksManager.loadFromFile(file);
+        manager1.getListAllEpic().forEach(System.out::println);
+        System.out.println();
+        manager1.getListSubTasks().forEach(System.out::println);
+        System.out.println();
+        manager1.getListAllTasks().forEach(System.out::println);
+        System.out.println();
+        manager1.getHistory().forEach(System.out::println);
+
+        System.out.println("--------------");
+
+        Task task = new Task("new Task", "new Description", Status.NEW);
+        manager.createTask(task);
+        manager.getListAllTasks().forEach(System.out::println);
+        SubTask subTask2 = new SubTask("new Subtask", "new Description", Status.NEW, epic.getId());
+        manager.createSubTask(subTask2);
+        manager.getListSubTasks().forEach(System.out::println);
+        manager.getListAllEpic().forEach(System.out::println);
         //Спринт 5
 //        TaskManager taskManager = Managers.getDefault(Managers.getDefaultHistory());
 

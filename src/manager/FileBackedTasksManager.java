@@ -1,13 +1,14 @@
 package manager;
 
 import entity.*;
-import utility.GeneratedID;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 
 import static utility.ConverterCSV.historyFromString;
 import static utility.ConverterCSV.historyToString;
+import static utility.GeneratedID.getId;
+import static utility.GeneratedID.setId;
 
 public class FileBackedTasksManager extends InMemoryTaskManager {
 
@@ -31,8 +32,6 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
     public static FileBackedTasksManager loadFromFile(File file) {
 
         FileBackedTasksManager tasksManager = new FileBackedTasksManager(file);
-        GeneratedID generatedID = new GeneratedID();
-
 
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(file, StandardCharsets.UTF_8))) {
 
@@ -55,8 +54,8 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
                     System.out.println("Это не задача");
                 }
                 if (task != null) {
-                    if (task.getId() > GeneratedID.getId()) {
-                        generatedID.setId(GeneratedID.getId());
+                    if (task.getId() > getId()) {
+                        setId(getId());
                     }
                 }
             }
