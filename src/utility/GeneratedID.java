@@ -7,7 +7,7 @@ public class GeneratedID {
         return ID++;
     }
 
-    public static void setId(int id) {
+    public static void setIfGreater(int id) {
         if (GeneratedID.ID < id) {
             GeneratedID.ID = id;
         }

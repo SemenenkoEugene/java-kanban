@@ -8,7 +8,7 @@ import java.nio.charset.StandardCharsets;
 import static utility.ConverterCSV.historyFromString;
 import static utility.ConverterCSV.historyToString;
 import static utility.GeneratedID.getId;
-import static utility.GeneratedID.setId;
+import static utility.GeneratedID.setIfGreater;
 
 public class FileBackedTasksManager extends InMemoryTaskManager {
 
@@ -54,9 +54,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
                     System.out.println("Это не задача");
                 }
                 if (task != null) {
-                    if (task.getId() > getId()) {
-                        setId(getId());
-                    }
+                    setIfGreater(getId());
                 }
             }
 
