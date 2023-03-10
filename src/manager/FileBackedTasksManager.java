@@ -1,14 +1,14 @@
 package manager;
 
 import entity.*;
+import utility.GeneratedID;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 
 import static utility.ConverterCSV.historyFromString;
 import static utility.ConverterCSV.historyToString;
-import static utility.GeneratedID.getId;
-import static utility.GeneratedID.setIfGreater;
 
 public class FileBackedTasksManager extends InMemoryTaskManager {
 
@@ -32,7 +32,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
     public static FileBackedTasksManager loadFromFile(File file) {
 
         FileBackedTasksManager tasksManager = new FileBackedTasksManager(file);
-
+        int idMax = 0;
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(file, StandardCharsets.UTF_8))) {
 
             bufferedReader.readLine();
@@ -54,7 +54,10 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
                     System.out.println("Это не задача");
                 }
                 if (task != null) {
-                    setIfGreater(getId());
+                    idMax = getIdMax(tasksManager.getListAllTasks(), idMax);
+                    idMax = getIdMax(tasksManager.getListSubTasks(), idMax);
+                    idMax = getIdMax(tasksManager.getListAllEpic(), idMax);
+                    GeneratedID.setIfGreater(idMax);
                 }
             }
 
@@ -68,6 +71,15 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
             throw new ManagerSaveException("Не удалось прочитать данные из файла", e);
         }
         return tasksManager;
+    }
+
+    private static <T extends Task> int  getIdMax(List<T> tasks, int idMax) {
+        for (T maxTask : tasks) {
+            if (idMax < maxTask.getId()) {
+                idMax = maxTask.getId();
+            }
+        }
+        return idMax;
     }
 
     /**
@@ -270,15 +282,15 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         save();
     }
 
-    public Task addTask(Task task) {
+    private Task addTask(Task task) {
         return super.createTask(task);
     }
 
-    public Epic addEpic(Epic epic) {
+    private Epic addEpic(Epic epic) {
         return super.createEpic(epic);
     }
 
-    public SubTask addSubTask(SubTask subTask) {
+    private SubTask addSubTask(SubTask subTask) {
         return super.createSubTask(subTask);
     }
 }

@@ -1,10 +1,8 @@
 id,type,name,status,description,epic
 1,TASK,Построить дом,new,Возвести стены,
-2,TASK,Посадить дерево,new,Купить саженец,
-5,TASK,new Task,new,new Description,
-3,EPIC,Магазин,new,Купить продукты,
-7,EPIC,new Epic,new,new Description,
-4,SUBTASK,Еда,new,Составить список покупки еды,3
-6,SUBTASK,new Subtask,new,new Description,3
+3,TASK,Посадить дерево1,new,Купить саженец1,
+52,TASK,Посадить дерево,new,Купить саженец,
+53,TASK,new Task,new,new Description,
+4,EPIC,Магазин,new,Купить продукты,
+5,SUBTASK,Еда,new,Составить список покупки еды,4
 
-1,2,4

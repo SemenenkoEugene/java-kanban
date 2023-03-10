@@ -1,15 +1,13 @@
 package utility;
 
 public class GeneratedID {
-    private static int ID = 1;
+    private static int ID = 0;
 
     public static int getId() {
-        return ID++;
+        return ++ID;
     }
 
     public static void setIfGreater(int id) {
-        if (GeneratedID.ID < id) {
-            GeneratedID.ID = id;
-        }
+        ID = id;
     }
 }
