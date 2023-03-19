@@ -4,10 +4,7 @@ import entity.Epic;
 import entity.SubTask;
 import utility.GeneratedID;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class SubTaskController {
 
@@ -31,6 +28,9 @@ public class SubTaskController {
 
     // получение списка всех подзадач
     public List<SubTask> getListSubTasks() {
+        if (subTasks.size() == 0) {
+            return Collections.emptyList();
+        }
         return new ArrayList<>(subTasks.values());
     }
 

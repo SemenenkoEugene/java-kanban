@@ -5,6 +5,7 @@ import utility.GeneratedID;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static utility.ConverterCSV.historyFromString;
@@ -73,7 +74,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         return tasksManager;
     }
 
-    private static <T extends Task> int  getIdMax(List<T> tasks, int idMax) {
+    private static <T extends Task> int getIdMax(List<T> tasks, int idMax) {
         for (T maxTask : tasks) {
             if (idMax < maxTask.getId()) {
                 idMax = maxTask.getId();
@@ -87,7 +88,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
      */
     public void save() {
         try (FileWriter fileWriter = new FileWriter(file, StandardCharsets.UTF_8)) {
-            fileWriter.write("id,type,name,status,description,epic\n");
+            fileWriter.write("id,type,name,status,description,startTime,duration,epic\n");
 
             for (Task task : getListAllTasks()) {
                 fileWriter.write(toString(task) + "\n");
@@ -126,7 +127,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
      * метод сохранения задачи в строку
      *
      * @param task принимает вид задачи
-     * @return строку вида "id,type,name,status,description,epic"
+     * @return строку вида "id,type,name,status,description,startTime,duration,epic"
      */
     private String toString(Task task) {
         String[] arrayStringsCSV = {Integer.toString(task.getId()),
@@ -134,6 +135,8 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
                 task.getName(),
                 task.getStatus().toString(),
                 task.getDescription(),
+                String.valueOf(task.getStartTime()),
+                String.valueOf(task.getDuration()),
                 getParentEpicId(task)};
         return String.join(",", arrayStringsCSV);
     }
@@ -164,19 +167,21 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         String name = values[2];
         String status = values[3];
         String description = values[4];
-        Integer idOfEpic = type.equals(TaskType.SUBTASK.toString()) ? Integer.valueOf(values[5]) : null;
+        LocalDateTime startTime = LocalDateTime.parse(values[5]);
+        long duration = Long.parseLong(values[6]);
+        Integer idOfEpic = type.equals(TaskType.SUBTASK.toString()) ? Integer.valueOf(values[7]) : null;
         switch (type) {
             case "EPIC":
-                Epic epic = new Epic(name, description, Status.valueOf(status.toUpperCase()));
+                Epic epic = new Epic(name, description, Status.valueOf(status.toUpperCase()), startTime, duration);
                 epic.setId(Integer.parseInt(id));
                 epic.setStatus(Status.valueOf(status.toUpperCase()));
                 return epic;
             case "SUBTASK":
-                SubTask subTask = new SubTask(name, description, Status.valueOf(status.toUpperCase()), idOfEpic);
+                SubTask subTask = new SubTask(name, description, Status.valueOf(status.toUpperCase()), startTime, duration, idOfEpic);
                 subTask.setId(Integer.parseInt(id));
                 return subTask;
             case "TASK":
-                Task task = new Task(name, description, Status.valueOf(status.toUpperCase()));
+                Task task = new Task(name, description, Status.valueOf(status.toUpperCase()), startTime, duration);
                 task.setId(Integer.parseInt(id));
                 return task;
             default:

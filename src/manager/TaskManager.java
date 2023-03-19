@@ -5,6 +5,7 @@ import entity.SubTask;
 import entity.Task;
 
 import java.util.List;
+import java.util.Set;
 
 public interface TaskManager {
 
@@ -67,5 +68,7 @@ public interface TaskManager {
 
     // Получение истории
     List<Task> getHistory();
+
+
 
 }

@@ -1,12 +1,11 @@
 package controller;
 
 import entity.Task;
+import manager.InMemoryTaskManager;
+import org.junit.jupiter.api.BeforeEach;
 import utility.GeneratedID;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class TaskController {
 
@@ -39,9 +38,11 @@ public class TaskController {
     public Task updateTaskById(Task task) {
         return tasks.put(task.getId(), task);
     }
-
     // удаление задачи по Id
+
     public void deleteTaskById(Integer id) {
         tasks.remove(id);
     }
+
+
 }

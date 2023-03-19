@@ -1,5 +1,6 @@
 package entity;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -11,6 +12,7 @@ import java.util.Objects;
 public class Epic extends Task {
 
     private List<SubTask> subTasks = new ArrayList<>();
+    private LocalDateTime endTime;
 
     public Epic(String name, String description) {
         super(name, description);
@@ -18,6 +20,16 @@ public class Epic extends Task {
 
     public Epic(String name, String description, Status status) {
         super(name, description, status);
+
+    }
+
+    public Epic(String name, String description, Status status, LocalDateTime startTime, long duration) {
+        super(name, description, status, startTime, duration);
+    }
+
+    public Epic(String name, String description, Integer id, Status status, LocalDateTime startTime, long duration) {
+        super(name, description, id, status, startTime, duration);
+        this.endTime = getEndTime();
     }
 
     private boolean isStatus(List<SubTask> tasks, Status status) {
@@ -40,6 +52,43 @@ public class Epic extends Task {
         }
     }
 
+    private void updateTimeEpic() {
+        getEndTimeEpic();
+        getStartTimeEpic();
+    }
+
+    private long getDurationEpic() {
+        int duration = 0;
+        for (SubTask subTask : subTasks) {
+            duration += subTask.duration;
+        }
+        return duration;
+    }
+
+    private LocalDateTime getEndTimeEpic() {
+        LocalDateTime endTime = subTasks.get(0).getEndTime();
+        for (SubTask subTask : subTasks) {
+            if (subTask.getEndTime().isAfter(endTime)) {
+                endTime = subTask.getEndTime();
+            }
+        }
+        return endTime;
+    }
+
+    private LocalDateTime getStartTimeEpic() {
+        if (subTasks.size() != 0) {
+            LocalDateTime startTime = subTasks.get(0).getStartTime();
+            for (SubTask subTask : subTasks) {
+                if (subTask.getStartTime().isBefore(startTime)) {
+                    startTime = subTask.getStartTime();
+                }
+            }
+            return startTime;
+        } else {
+            return this.startTime;
+        }
+    }
+
     public void addSubTask(SubTask subTask) {
         for (SubTask task : subTasks) {
             if (task.getId().equals(subTask.getId())) {
@@ -49,16 +98,39 @@ public class Epic extends Task {
         }
         subTasks.add(subTask);
         checkStatusEpic();
+        updateTimeEpic();
     }
 
     public void removeSubTask(SubTask subTask) {
         subTasks.remove(subTask);
         checkStatusEpic();
+        updateTimeEpic();
+    }
+
+    @Override
+    public LocalDateTime getEndTime() {
+        return getEndTimeEpic();
+    }
+
+    public LocalDateTime getStartTime() {
+        return getStartTimeEpic();
+    }
+
+    public long getDuration() {
+        return getDurationEpic();
+    }
+
+    public void setEndTime(LocalDateTime endTime) {
+        this.endTime = endTime;
     }
 
     public void setSubTasks(List<SubTask> subTasks) {
         this.subTasks = subTasks;
         checkStatusEpic();
+    }
+
+    public List<SubTask> getSubTasks() {
+        return subTasks;
     }
 
     @Override
@@ -78,11 +150,14 @@ public class Epic extends Task {
     @Override
     public String toString() {
         return "Epic{" +
-                "subTasks=" + subTasks +
-                ", name='" + name + '\'' +
-                ", description='" + description + '\'' +
-                ", id=" + id +
-                ", status=" + status +
-                '}';
+               "subTasks=" + subTasks +
+               ", name='" + name + '\'' +
+               ", description='" + description + '\'' +
+               ", id=" + id +
+               ", status=" + status +
+               ", startTime=" + getStartTime() +
+               ", endTime=" + getEndTime() +
+               ", duration=" + duration +
+               '}';
     }
 }

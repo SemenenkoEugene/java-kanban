@@ -1,5 +1,6 @@
 package entity;
 
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 /**
@@ -10,6 +11,9 @@ public class SubTask extends Task {
 
     private final Integer epicId;
 
+    private LocalDateTime endTime;
+
+
     public SubTask(String name, String description, Integer epicId) {
         super(name, description);
         this.epicId = epicId;
@@ -17,6 +21,17 @@ public class SubTask extends Task {
 
     public SubTask(String name, String description, Status status, Integer epicId) {
         super(name, description, status);
+        this.epicId = epicId;
+    }
+
+    public SubTask(String name, String description, Status status, LocalDateTime startTime, long duration, Integer epicId) {
+        super(name, description, status, startTime, duration);
+        this.epicId = epicId;
+        this.endTime = super.getEndTime();
+    }
+
+    public SubTask(String name, String description, Integer id, Status status, LocalDateTime startTime, long duration, Integer epicId) {
+        super(name, description, id, status, startTime, duration);
         this.epicId = epicId;
     }
 
@@ -41,11 +56,14 @@ public class SubTask extends Task {
     @Override
     public String toString() {
         return "SubTask{" +
-                "epicId=" + epicId +
-                ", name='" + name + '\'' +
-                ", description='" + description + '\'' +
-                ", id=" + id +
-                ", status=" + status +
-                '}';
+               "epicId=" + epicId +
+               ", name='" + name + '\'' +
+               ", description='" + description + '\'' +
+               ", id=" + id +
+               ", status=" + status +
+               ", startTime=" + startTime +
+               ", endTime=" + getEndTime() +
+               ", duration=" + duration +
+               '}';
     }
 }
