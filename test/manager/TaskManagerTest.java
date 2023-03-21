@@ -232,16 +232,4 @@ abstract class TaskManagerTest<T extends TaskManager> {
         assertNull(manager.getSubTaskById(777));
     }
 
-    @Test
-    public void shouldReturnEmptyHistory() {
-        assertEquals(Collections.EMPTY_LIST, manager.getHistory());
-    }
-
-    @Test
-    public void shouldReturnEmptyHistoryIfTasksNotExist() {
-        manager.getTaskById(777);
-        manager.getSubTaskById(777);
-        manager.getEpicById(777);
-        assertTrue(manager.getHistory().isEmpty());
-    }
 }

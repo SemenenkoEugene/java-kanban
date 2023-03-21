@@ -194,4 +194,8 @@ class InMemoryHistoryManagerTest {
         assertTrue(list.contains(subtask));
     }
 
+    @Test
+    public void shouldReturnEmptyHistory() {
+        assertEquals(Collections.emptyList(), manager.getHistory());
+    }
 }
