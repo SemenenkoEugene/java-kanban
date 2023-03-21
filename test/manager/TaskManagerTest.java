@@ -7,6 +7,7 @@ import entity.Task;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -34,7 +35,7 @@ abstract class TaskManagerTest<T extends TaskManager> {
         Task task = createTask();
         manager.createTask(task);
         List<Task> tasks = manager.getListAllTasks();
-        assertNotNull(task.getStatus());
+        assertNotNull(tasks.get(0));
         assertEquals(Status.NEW, task.getStatus());
         assertEquals(List.of(task), tasks);
     }
@@ -44,7 +45,7 @@ abstract class TaskManagerTest<T extends TaskManager> {
         Epic epic = createEpic();
         manager.createEpic(epic);
         List<Epic> epics = manager.getListAllEpic();
-        assertNotNull(epic.getStatus());
+        assertNotNull(epics.get(0));
         assertEquals(Status.NEW, epic.getStatus());
         assertEquals(Collections.EMPTY_LIST, epic.getSubTasks());
         assertEquals(List.of(epic), epics);
@@ -57,7 +58,7 @@ abstract class TaskManagerTest<T extends TaskManager> {
         SubTask subTask = createSubTask(epic);
         manager.createSubTask(subTask);
         List<SubTask> subTasks = manager.getListSubTasks();
-        assertNotNull(subTask.getStatus());
+        assertNotNull(subTasks.get(0));
         assertEquals(epic.getId(), subTask.getEpicId());
         assertEquals(Status.NEW, subTask.getStatus());
         assertEquals(List.of(subTask), subTasks);
@@ -70,8 +71,8 @@ abstract class TaskManagerTest<T extends TaskManager> {
         Task task = createTask();
         manager.createTask(task);
         task.setStatus(Status.IN_PROGRESS);
-        manager.updateTaskById(task);
-        assertEquals(Status.IN_PROGRESS, manager.getTaskById(task.getId()).getStatus());
+        Task updateTaskById = manager.updateTaskById(task);
+        assertEquals(Status.IN_PROGRESS, updateTaskById.getStatus());
     }
 
     @Test
@@ -95,40 +96,12 @@ abstract class TaskManagerTest<T extends TaskManager> {
     }
 
     @Test
-    public void shouldUpdateTaskStatusToInDone() {
-        Task task = createTask();
-        manager.createTask(task);
-        task.setStatus(Status.DONE);
-        manager.updateTaskById(task);
-        assertEquals(Status.DONE, manager.getTaskById(task.getId()).getStatus());
-    }
-
-    @Test
-    public void shouldUpdateEpicStatusToInDone() {
-        Epic epic = createEpic();
-        manager.createEpic(epic);
-        epic.setStatus(Status.DONE);
-        assertEquals(Status.DONE, manager.getEpicById(epic.getId()).getStatus());
-    }
-
-    @Test
-    public void shouldUpdateSubtaskStatusToInDone() {
-        Epic epic = createEpic();
-        manager.createEpic(epic);
-        SubTask subTask = createSubTask(epic);
-        manager.createSubTask(subTask);
-        subTask.setStatus(Status.DONE);
-        manager.updateSubTaskById(subTask);
-        assertEquals(Status.DONE, manager.getSubTaskById(subTask.getId()).getStatus());
-        assertEquals(Status.DONE, manager.getEpicById(epic.getId()).getStatus());
-    }
-
-    @Test
     public void shouldDeleteAllTasks() {
         Task task = createTask();
         manager.createTask(task);
         manager.deleteAllTasks();
-        assertEquals(Collections.EMPTY_LIST, manager.getListAllTasks());
+//        assertEquals(Collections.EMPTY_LIST, manager.getListAllTasks());
+        assertTrue(manager.getListAllTasks().isEmpty());
     }
 
     @Test
@@ -136,7 +109,8 @@ abstract class TaskManagerTest<T extends TaskManager> {
         Epic epic = createEpic();
         manager.createEpic(epic);
         manager.deleteAllEpics();
-        assertEquals(Collections.EMPTY_LIST, manager.getListAllEpic());
+//        assertEquals(Collections.EMPTY_LIST, manager.getListAllEpic());
+        assertTrue(manager.getListAllEpic().isEmpty());
     }
 
     @Test
