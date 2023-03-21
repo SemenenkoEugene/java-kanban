@@ -17,10 +17,10 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class FileBackedTasksManagerTest extends TaskManagerTest<InMemoryTaskManager> {
+class FileBackedTasksManagerTest extends TaskManagerTest<FileBackedTasksManager> {
 
 
-    public static final Path path = Path.of("src/resources/data.csv");
+    public static final Path path = Path.of("src/resources/test.data.csv");
     File file = new File(String.valueOf(path));
 
     @BeforeEach

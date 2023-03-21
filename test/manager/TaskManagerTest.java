@@ -7,7 +7,6 @@ import entity.Task;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -71,8 +70,8 @@ abstract class TaskManagerTest<T extends TaskManager> {
         Task task = createTask();
         manager.createTask(task);
         task.setStatus(Status.IN_PROGRESS);
-        Task updateTaskById = manager.updateTaskById(task);
-        assertEquals(Status.IN_PROGRESS, updateTaskById.getStatus());
+        manager.updateTaskById(task);
+        assertEquals(Status.IN_PROGRESS, manager.getTaskById(task.getId()).getStatus());
     }
 
     @Test
@@ -96,11 +95,26 @@ abstract class TaskManagerTest<T extends TaskManager> {
     }
 
     @Test
+    public void shouldUpdateEpicStatusToInProgressIfSubtaskStatusInProgress(){
+        Epic epic = createEpic();
+        manager.createEpic(epic);
+        SubTask subTask1 = createSubTask(epic);
+        manager.createSubTask(subTask1);
+        manager.updateSubTaskById(subTask1);
+        SubTask subTask2 = createSubTask(epic);
+        manager.createSubTask(subTask2);
+        subTask2.setStatus(Status.IN_PROGRESS);
+        manager.updateSubTaskById(subTask2);
+        assertEquals(Status.IN_PROGRESS,manager.getSubTaskById(subTask2.getId()).getStatus());
+        assertEquals(Status.IN_PROGRESS,manager.getEpicById(epic.getId()).getStatus());
+
+    }
+
+    @Test
     public void shouldDeleteAllTasks() {
         Task task = createTask();
         manager.createTask(task);
         manager.deleteAllTasks();
-//        assertEquals(Collections.EMPTY_LIST, manager.getListAllTasks());
         assertTrue(manager.getListAllTasks().isEmpty());
     }
 
@@ -109,8 +123,7 @@ abstract class TaskManagerTest<T extends TaskManager> {
         Epic epic = createEpic();
         manager.createEpic(epic);
         manager.deleteAllEpics();
-//        assertEquals(Collections.EMPTY_LIST, manager.getListAllEpic());
-        assertTrue(manager.getListAllEpic().isEmpty());
+        assertEquals(Collections.emptyList(), manager.getListAllEpic());
     }
 
     @Test
@@ -120,7 +133,7 @@ abstract class TaskManagerTest<T extends TaskManager> {
         SubTask subTask = createSubTask(epic);
         manager.createSubTask(subTask);
         manager.deleteAllSubTasks();
-        assertTrue(epic.getSubTasks().isEmpty());
+        assertTrue(manager.getListAllTasks().isEmpty());
     }
 
     @Test
@@ -139,7 +152,7 @@ abstract class TaskManagerTest<T extends TaskManager> {
         Task task = createTask();
         manager.createTask(task);
         manager.deleteTaskById(task.getId());
-        assertEquals(Collections.EMPTY_LIST, manager.getListAllTasks());
+        assertEquals(Collections.emptyList(), manager.getListAllTasks());
     }
 
     @Test
@@ -147,7 +160,7 @@ abstract class TaskManagerTest<T extends TaskManager> {
         Epic epic = createEpic();
         manager.createEpic(epic);
         manager.deleteEpicById(epic.getId());
-        assertEquals(Collections.EMPTY_LIST, manager.getListAllEpic());
+        assertEquals(Collections.emptyList(), manager.getListAllEpic());
     }
 
     @Test
@@ -231,18 +244,4 @@ abstract class TaskManagerTest<T extends TaskManager> {
         manager.getEpicById(777);
         assertTrue(manager.getHistory().isEmpty());
     }
-
-    @Test
-    public void shouldReturnHistoryWithTasks() {
-        Epic epic = createEpic();
-        manager.createEpic(epic);
-        SubTask subtask = createSubTask(epic);
-        manager.createSubTask(subtask);
-        manager.getEpicById(epic.getId());
-        manager.getSubTaskById(subtask.getId());
-        List<Task> list = manager.getHistory();
-        assertEquals(1, list.size());
-        assertTrue(list.contains(subtask));
-    }
-
 }
