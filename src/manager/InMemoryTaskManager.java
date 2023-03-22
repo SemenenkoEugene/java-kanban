@@ -5,6 +5,7 @@ import entity.Epic;
 import entity.SubTask;
 import entity.Task;
 
+import java.time.LocalDateTime;
 import java.util.*;
 
 /**
@@ -16,9 +17,6 @@ public class InMemoryTaskManager implements TaskManager {
     private final EpicController epicController = new EpicController();
     private final SubTaskController subTaskController = new SubTaskController(epicController);
     protected HistoryManager historyManager = Managers.getDefaultHistory();
-
-    public Set<Task> prioritizedTasks = new TreeSet<>(Comparator.comparing(Task::getStartTime));
-
 
     public InMemoryTaskManager(HistoryManager historyManager) {
         this.historyManager = historyManager;
@@ -48,7 +46,6 @@ public class InMemoryTaskManager implements TaskManager {
     //получение списка всех подзадач
     @Override
     public List<SubTask> getListSubTasks() {
-
         return subTaskController.getListSubTasks();
     }
 
@@ -85,7 +82,6 @@ public class InMemoryTaskManager implements TaskManager {
     // создание новой задачи
     @Override
     public Task createTask(Task task) {
-        prioritizedTasks.add(task);
         validationTasks();
         return taskController.createTask(task);
     }
@@ -180,6 +176,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     public List<Task> getPrioritizedTasks() {
+        Set<Task> prioritizedTasks = new TreeSet<>(Comparator.comparing(Task::getStartTime,Comparator.nullsLast(LocalDateTime::compareTo)));
         prioritizedTasks.addAll(taskController.getListAllTasks());
         prioritizedTasks.addAll(subTaskController.getListSubTasks());
         return new ArrayList<>(prioritizedTasks);
@@ -199,7 +196,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     private boolean isOverlapping(Task task) {
-        List<Task> tasks = List.copyOf(prioritizedTasks);
+        List<Task> tasks = getPrioritizedTasks();
         int count = 0;
         if (tasks.size() > 0) {
             for (Task taskCheck : tasks) {
