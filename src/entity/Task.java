@@ -15,7 +15,7 @@ public class Task {
     protected Status status;
     protected LocalDateTime startTime;
     protected long duration;
-
+    public long SECOND_IN_MINUTE = 60L;
 
     public Task(String name, String description) {
         this.name = name;
@@ -53,7 +53,6 @@ public class Task {
     }
 
     public LocalDateTime getEndTime() {
-        long SECOND_IN_MINUTE = 60L;
         return startTime.plusSeconds(duration * SECOND_IN_MINUTE);
     }
 

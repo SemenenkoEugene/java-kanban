@@ -66,13 +66,16 @@ public class Epic extends Task {
     }
 
     private LocalDateTime getEndTimeEpic() {
-        LocalDateTime endTime = subTasks.get(0).getEndTime();
-        for (SubTask subTask : subTasks) {
-            if (subTask.getEndTime().isAfter(endTime)) {
-                endTime = subTask.getEndTime();
+        if (subTasks.size() != 0) {
+            LocalDateTime endTime = subTasks.get(0).getEndTime();
+            for (SubTask subTask : subTasks) {
+                if (subTask.getEndTime().isAfter(endTime)) {
+                    endTime = subTask.getEndTime();
+                }
             }
+            return endTime;
         }
-        return endTime;
+        return null;
     }
 
     private LocalDateTime getStartTimeEpic() {
@@ -85,7 +88,7 @@ public class Epic extends Task {
             }
             return startTime;
         } else {
-            return this.startTime;
+            return null;
         }
     }
 
