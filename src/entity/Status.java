@@ -9,11 +9,7 @@ public enum Status {
     IN_PROGRESS("inProgress"),
     DONE("done");
 
-    private String stringStatus;
-
-    Status(){
-
-    }
+    private final String stringStatus;
 
     Status(String stringStatus) {
         this.stringStatus = stringStatus;
