@@ -82,13 +82,14 @@ public class InMemoryTaskManager implements TaskManager {
     // создание новой задачи
     @Override
     public Task createTask(Task task) {
-        validationTasks();
+        validationTasks(task);
         return taskController.createTask(task);
     }
 
     // создание новой подзадачи
     @Override
     public SubTask createSubTask(SubTask subTask) {
+        validationTasks(subTask);
         return subTaskController.createSubTask(subTask);
     }
 
@@ -101,12 +102,14 @@ public class InMemoryTaskManager implements TaskManager {
     // обновление задачи
     @Override
     public Task updateTaskById(Task task) {
+        validationTasks(task);
         return taskController.updateTaskById(task);
     }
 
     // обновление подзадачи по Id
     @Override
     public void updateSubTaskById(SubTask subTask) {
+        validationTasks(subTask);
         subTaskController.updateSubTaskById(subTask);
     }
 
@@ -176,46 +179,32 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     public List<Task> getPrioritizedTasks() {
-        Set<Task> prioritizedTasks = new TreeSet<>(Comparator.comparing(Task::getStartTime,Comparator.nullsLast(LocalDateTime::compareTo)));
+        Set<Task> prioritizedTasks = new TreeSet<>(
+                Comparator.comparing(Task::getStartTime,
+                Comparator.nullsLast(Comparator.naturalOrder()))
+        );
         prioritizedTasks.addAll(taskController.getListAllTasks());
         prioritizedTasks.addAll(subTaskController.getListSubTasks());
         return new ArrayList<>(prioritizedTasks);
     }
 
-    public void validationTasks() {
-        List<Task> tasks = getPrioritizedTasks();
-        for (int i = 1; i < tasks.size() - 1; i++) {
-            Task task = tasks.get(i);
-            boolean taskHasIntersections = isOverlapping(task);
-
-            if (taskHasIntersections) {
-                throw new ManagerValidateException(
-                        "Задачи #" + task.getId() + " и #" + tasks.get(i - 1) + "пересекаются");
-            }
+    public void validationTasks(Task task) {
+        boolean taskHasIntersections = checkTime(task);
+        if (taskHasIntersections) {
+            throw new ManagerValidateException("Задача пересекается с уже существующей");
         }
     }
 
-    private boolean isOverlapping(Task task) {
+    private boolean checkTime(Task task) {
         List<Task> tasks = getPrioritizedTasks();
-        int count = 0;
-        if (tasks.size() > 0) {
-            for (Task taskCheck : tasks) {
-                if (taskCheck.getStartTime() != null && taskCheck.getEndTime() != null) {
-                    if (task.getStartTime().isBefore(taskCheck.getStartTime())
-                        && task.getEndTime().isBefore(taskCheck.getStartTime())) {
-                        return true;
-                    } else if (task.getStartTime().isAfter(taskCheck.getEndTime())
-                               && task.getEndTime().isAfter(taskCheck.getEndTime())) {
-                        return true;
-                    }
-                } else {
-                    count++;
+        for (Task taskCheck : tasks) {
+            if (taskCheck.getStartTime() != null && taskCheck.getEndTime() != null) {
+                if (taskCheck.getStartTime().isBefore(task.getEndTime())
+                    && task.getStartTime().isBefore(taskCheck.getEndTime())) {
+                    return true;
                 }
             }
-            return count == tasks.size();
-        } else {
-            return true;
         }
-
+        return false;
     }
 }

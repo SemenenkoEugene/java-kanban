@@ -14,6 +14,7 @@ public class Epic extends Task {
     private List<SubTask> subTasks = new ArrayList<>();
     private LocalDateTime endTime;
 
+
     public Epic(String name, String description) {
         super(name, description);
     }
@@ -53,11 +54,12 @@ public class Epic extends Task {
     }
 
     private void updateTimeEpic() {
-        getEndTimeEpic();
-        getStartTimeEpic();
+        this.startTime = calculateStartTimeEpic();
+        this.endTime = calculateEndTimeEpic();
+        this.duration = calculateDurationEpic();
     }
 
-    private long getDurationEpic() {
+    private long calculateDurationEpic() {
         int duration = 0;
         for (SubTask subTask : subTasks) {
             duration += subTask.duration;
@@ -65,7 +67,7 @@ public class Epic extends Task {
         return duration;
     }
 
-    private LocalDateTime getEndTimeEpic() {
+    private LocalDateTime calculateEndTimeEpic() {
         if (subTasks.size() != 0) {
             LocalDateTime endTime = subTasks.get(0).getEndTime();
             for (SubTask subTask : subTasks) {
@@ -78,7 +80,7 @@ public class Epic extends Task {
         return null;
     }
 
-    private LocalDateTime getStartTimeEpic() {
+    private LocalDateTime calculateStartTimeEpic() {
         if (subTasks.size() != 0) {
             LocalDateTime startTime = subTasks.get(0).getStartTime();
             for (SubTask subTask : subTasks) {
@@ -112,15 +114,15 @@ public class Epic extends Task {
 
     @Override
     public LocalDateTime getEndTime() {
-        return getEndTimeEpic();
+        return endTime;
     }
 
     public LocalDateTime getStartTime() {
-        return getStartTimeEpic();
+        return startTime;
     }
 
     public long getDuration() {
-        return getDurationEpic();
+        return duration;
     }
 
     public void setEndTime(LocalDateTime endTime) {
@@ -158,8 +160,8 @@ public class Epic extends Task {
                ", description='" + description + '\'' +
                ", id=" + id +
                ", status=" + status +
-               ", startTime=" + getStartTime() +
-               ", endTime=" + getEndTime() +
+               ", startTime=" + startTime +
+               ", endTime=" + endTime +
                ", duration=" + duration +
                '}';
     }

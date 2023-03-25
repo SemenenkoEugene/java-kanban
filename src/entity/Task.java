@@ -1,5 +1,6 @@
 package entity;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
@@ -27,6 +28,8 @@ public class Task {
         this.name = name;
         this.description = description;
         this.status = status;
+        this.startTime = LocalDateTime.MAX;
+        this.duration = 0;
     }
 
     public Task(String name, String description, Integer id) {
@@ -53,7 +56,10 @@ public class Task {
     }
 
     public LocalDateTime getEndTime() {
-        return startTime.plusSeconds(duration * SECOND_IN_MINUTE);
+        if (startTime != null) {
+            return startTime.plusSeconds(duration * SECOND_IN_MINUTE);
+        }
+        return LocalDateTime.MAX;
     }
 
     public Integer getId() {
