@@ -17,6 +17,11 @@ public class InMemoryTaskManager implements TaskManager {
     private final SubTaskController subTaskController = new SubTaskController(epicController);
     protected HistoryManager historyManager = Managers.getDefaultHistory();
 
+    private final Set<Task> prioritizedTasks = new TreeSet<>(
+            Comparator.comparing(Task::getStartTime,
+                    Comparator.nullsLast(Comparator.naturalOrder()))
+    );
+
     public InMemoryTaskManager(HistoryManager historyManager) {
         this.historyManager = historyManager;
     }
@@ -81,6 +86,7 @@ public class InMemoryTaskManager implements TaskManager {
     // создание новой задачи
     @Override
     public Task createTask(Task task) {
+        prioritizedTasks.add(task);
         validationTasks(task);
         return taskController.createTask(task);
     }
@@ -88,6 +94,7 @@ public class InMemoryTaskManager implements TaskManager {
     // создание новой подзадачи
     @Override
     public SubTask createSubTask(SubTask subTask) {
+        prioritizedTasks.add(subTask);
         validationTasks(subTask);
         return subTaskController.createSubTask(subTask);
     }
@@ -101,6 +108,7 @@ public class InMemoryTaskManager implements TaskManager {
     // обновление задачи
     @Override
     public Task updateTaskById(Task task) {
+        prioritizedTasks.add(task);
         validationTasks(task);
         return taskController.updateTaskById(task);
     }
@@ -108,6 +116,7 @@ public class InMemoryTaskManager implements TaskManager {
     // обновление подзадачи по Id
     @Override
     public void updateSubTaskById(SubTask subTask) {
+        prioritizedTasks.add(subTask);
         validationTasks(subTask);
         subTaskController.updateSubTaskById(subTask);
     }
@@ -178,12 +187,6 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     public List<Task> getPrioritizedTasks() {
-        Set<Task> prioritizedTasks = new TreeSet<>(
-                Comparator.comparing(Task::getStartTime,
-                Comparator.nullsLast(Comparator.naturalOrder()))
-        );
-        prioritizedTasks.addAll(taskController.getListAllTasks());
-        prioritizedTasks.addAll(subTaskController.getListSubTasks());
         return new ArrayList<>(prioritizedTasks);
     }
 

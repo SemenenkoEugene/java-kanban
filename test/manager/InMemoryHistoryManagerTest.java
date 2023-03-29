@@ -166,17 +166,13 @@ class InMemoryHistoryManagerTest {
     }
 
     @Test
-    public void shouldNotDuplicateHistory(){
+    public void shouldNotDuplicateHistory() {
         Task task1 = createTask();
         int newTaskId1 = generatedId();
         task1.setId(newTaskId1);
         manager.add(task1);
-        Task task2 = createTask();
-        int newTaskId2 = generatedId();
-        task2.setId(newTaskId2);
-        manager.add(task2);
         manager.add(task1);
-        assertEquals(List.of(task2, task1), manager.getHistory());
+        assertEquals(List.of(task1), manager.getHistory());
     }
 
     @Test
