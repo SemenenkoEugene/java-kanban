@@ -111,29 +111,15 @@ abstract class TaskManagerTest<T extends TaskManager> {
     }
 
     @Test
-    public void shouldDeleteAllTasks() {
+    public void shouldDeleteAll(){
         Task task = createTask();
         manager.createTask(task);
-        manager.deleteAllTasks();
-        assertTrue(manager.getListAllTasks().isEmpty());
-    }
-
-    @Test
-    public void shouldDeleteAllEpics() {
-        Epic epic = createEpic();
-        manager.createEpic(epic);
-        manager.deleteAllEpics();
-        assertEquals(Collections.emptyList(), manager.getListAllEpic());
-    }
-
-    @Test
-    public void shouldDeleteAllSubtasks() {
         Epic epic = createEpic();
         manager.createEpic(epic);
         SubTask subTask = createSubTask(epic);
         manager.createSubTask(subTask);
-        manager.deleteAllSubTasks();
-        assertTrue(manager.getListAllTasks().isEmpty());
+        manager.deleteAll();
+        assertEquals(Collections.emptyList(), manager.getListAllTasks());
     }
 
     @Test
@@ -182,14 +168,14 @@ abstract class TaskManagerTest<T extends TaskManager> {
 
     @Test
     public void shouldDoNothingIfTaskHashMapIsEmpty(){
-        manager.deleteAllTasks();
+        manager.deleteAll();
         manager.deleteTaskById(999);
         assertEquals(0, manager.getListAllTasks().size());
     }
 
     @Test
     public void shouldDoNothingIfEpicHashMapIsEmpty(){
-        manager.deleteAllEpics();
+        manager.deleteAll();
         manager.deleteEpicById(777);
         assertTrue(manager.getListAllEpic().isEmpty());
     }

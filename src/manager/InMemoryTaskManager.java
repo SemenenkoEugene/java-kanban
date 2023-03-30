@@ -108,6 +108,8 @@ public class InMemoryTaskManager implements TaskManager {
     // обновление задачи
     @Override
     public Task updateTaskById(Task task) {
+        taskController.deleteTaskById(task.getId());
+        prioritizedTasks.remove(task);
         prioritizedTasks.add(task);
         validationTasks(task);
         return taskController.updateTaskById(task);
@@ -116,6 +118,8 @@ public class InMemoryTaskManager implements TaskManager {
     // обновление подзадачи по Id
     @Override
     public void updateSubTaskById(SubTask subTask) {
+        subTaskController.deleteSubTaskById(subTask.getId());
+        prioritizedTasks.remove(subTask);
         prioritizedTasks.add(subTask);
         validationTasks(subTask);
         subTaskController.updateSubTaskById(subTask);
@@ -127,27 +131,19 @@ public class InMemoryTaskManager implements TaskManager {
         return epicController.updateEpicById(epic);
     }
 
-    // удаление всех задач
+    //удаление всех задач, подзадач, эпиков
     @Override
-    public void deleteAllTasks() {
+    public void deleteAll(){
+        prioritizedTasks.clear();
         taskController.deleteAllTasks();
-    }
-
-    // удаление всех подзадач
-    @Override
-    public void deleteAllSubTasks() {
         subTaskController.deleteAllSubTasks();
-    }
-
-    // удаление всех эпиков
-    @Override
-    public void deleteAllEpics() {
         epicController.deleteAllEpics();
     }
 
     // удаление подзадачи по Id
     @Override
     public void deleteSubTaskById(Integer id) {
+        prioritizedTasks.removeIf(subtask -> Objects.equals(subtask.getId(), id));
         subTaskController.deleteSubTaskById(id);
         historyManager.remove(id);
     }
@@ -157,11 +153,13 @@ public class InMemoryTaskManager implements TaskManager {
     public void deleteEpicById(Integer id) {
         epicController.deleteEpicById(id);
         historyManager.remove(id);
+
     }
 
     // удаление задачи по Id
     @Override
     public void deleteTaskById(Integer id) {
+        prioritizedTasks.removeIf(task -> Objects.equals(task.getId(), id));
         taskController.deleteTaskById(id);
         historyManager.remove(id);
     }

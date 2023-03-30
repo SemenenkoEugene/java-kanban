@@ -47,14 +47,8 @@ public interface TaskManager {
     // обновление эпика
     Epic updateEpicById(Epic epic);
 
-    // удаление всех задач
-    void deleteAllTasks();
-
-    // удаление всех подзадач
-    void deleteAllSubTasks();
-
-    // удаление всех эпиков
-    void deleteAllEpics();
+    //удаление всех задач, подзадач, эпиков
+    void deleteAll();
 
     // удаление подзадачи по Id
     void deleteSubTaskById(Integer id);

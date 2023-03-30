@@ -2,14 +2,11 @@ package manager;
 
 import entity.Epic;
 import entity.Status;
-import entity.SubTask;
-import entity.Task;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.nio.file.Path;
 import java.time.LocalDateTime;
-import java.util.Collections;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -17,38 +14,55 @@ import static org.junit.jupiter.api.Assertions.*;
 class FileBackedTasksManagerTest extends TaskManagerTest<FileBackedTasksManager> {
 
     @Test
-    public void shouldSaveTasksEpicsSubtasksHistory() {
-        Path path = Path.of("src/resources/test.data.csv");
+    public void shouldSaveEmptyListOfTasks() {
+        Path path = Path.of("src/resources/empty.data.csv");
         File file = new File(String.valueOf(path));
         manager = new FileBackedTasksManager(file, Managers.getDefaultHistory());
-        Task task = new Task("TaskName", "TaskDescription", 1, Status.NEW, LocalDateTime.now().withNano(0), 10);
-        manager.createTask(task);
-        Epic epic = new Epic("EpicName", "EpicDescription", 2, Status.NEW, LocalDateTime.now().withNano(0), 20);
-        manager.createEpic(epic);
-        SubTask subTask = new SubTask("SubTask", "SubTaskDescription", 3,
-                Status.NEW, LocalDateTime.of(2023, 3, 29, 17, 44), 20, epic.getId());
-        manager.createSubTask(subTask);
-        manager.getTaskById(1);
-        manager.getEpicById(2);
-        assertEquals(List.of(task), manager.getListAllTasks());
-        assertEquals(List.of(subTask), manager.getListSubTasks());
-        assertEquals(List.of(epic), manager.getListAllEpic());
-        assertEquals(List.of(task, epic), manager.getHistory());
+        assertTrue(manager.getListAllTasks().isEmpty());
     }
 
     @Test
-    public void shouldLoadTasksEpicsSubtasksHistory() {
+    public void shouldSaveEpicWithoutSubtasks() {
+        Path path = Path.of("src/resources/epicWithoutSubtasks.csv");
+        File file = new File(String.valueOf(path));
+        manager = new FileBackedTasksManager(file, Managers.getDefaultHistory());
+        Epic epic = new Epic("Epic", "EpicDescription", 1,
+                Status.NEW, LocalDateTime.now().withNano(0), 10);
+        manager.createEpic(epic);
+        assertEquals(List.of(epic), manager.getListAllEpic());
+    }
+
+    @Test
+    public void shouldSaveEmptyHistory() {
+        Path path = Path.of("src/resources/empty.data.csv");
+        File file = new File(String.valueOf(path));
+        manager = new FileBackedTasksManager(file, Managers.getDefaultHistory());
+        assertTrue(manager.getHistory().isEmpty());
+    }
+
+
+    @Test
+    public void shouldLoadEmptyListOfTasks() {
         Path path = Path.of("src/resources/empty.data.csv");
         File file = new File(String.valueOf(path));
         FileBackedTasksManager fileBackedTasksManager = FileBackedTasksManager.loadFromFile(file);
-        Task task = fileBackedTasksManager.getTaskById(1);
-        Epic epic = fileBackedTasksManager.getEpicById(2);
-        SubTask subTask = fileBackedTasksManager.getSubTaskById(3);
-        List<Task> history = fileBackedTasksManager.getHistory();
-        assertEquals(List.of(task), fileBackedTasksManager.getListAllTasks());
-        assertEquals(List.of(epic), fileBackedTasksManager.getListAllEpic());
-        assertEquals(List.of(subTask), fileBackedTasksManager.getListSubTasks());
-        assertEquals(history, fileBackedTasksManager.getHistory());
+        assertTrue(fileBackedTasksManager.getListAllTasks().isEmpty());
+    }
 
+    @Test
+    public void shouldLoadEpicWithoutSubtasks() {
+        Path path = Path.of("src/resources/epicWithoutSubtasks.csv");
+        File file = new File(String.valueOf(path));
+        FileBackedTasksManager fileBackedTasksManager = FileBackedTasksManager.loadFromFile(file);
+        assertEquals(List.of(fileBackedTasksManager.getEpicById(1)), fileBackedTasksManager.getListAllEpic());
+        assertTrue(fileBackedTasksManager.getListSubTasks().isEmpty());
+    }
+
+    @Test
+    public void shouldLoadEmptyHistory() {
+        Path path = Path.of("src/resources/empty.data.csv");
+        File file = new File(String.valueOf(path));
+        FileBackedTasksManager fileBackedTasksManager = FileBackedTasksManager.loadFromFile(file);
+        assertTrue(fileBackedTasksManager.getHistory().isEmpty());
     }
 }

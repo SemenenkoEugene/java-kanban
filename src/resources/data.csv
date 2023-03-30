@@ -1,8 +1,13 @@
-id,type,name,status,description,epic
-1,TASK,Построить дом,new,Возвести стены,
-3,TASK,Посадить дерево1,new,Купить саженец1,
-52,TASK,Посадить дерево,new,Купить саженец,
-53,TASK,new Task,new,new Description,
-4,EPIC,Магазин,new,Купить продукты,
-5,SUBTASK,Еда,new,Составить список покупки еды,4
+id,type,name,status,description,startTime,duration,epic
+1,TASK,Построить дом,new,Возвести стены,2023-03-25T14:00,50,
+2,TASK,Посадить дерево,new,Купить саженец,2023-03-25T22:50,20,
+3,TASK,Посадить дерево1,new,Купить саженец1,2023-03-25T23:20,30,
+8,TASK,new Task,new,new Description,+999999999-12-31T23:59:59.999999999,0,
+9,TASK,new Task,new,new Description,+999999999-12-31T23:59:59.999999999,0,
+4,EPIC,Магазин,new,Купить продукты,2023-03-19T11:00,100,
+11,EPIC,new Epic,new,new Description,+999999999-12-31T23:59:59.999999999,0,
+5,SUBTASK,Еда1,new,Составить список покупки еды1,2023-03-19T11:00,50,4
+6,SUBTASK,Еда2,new,Составить список покупки еды2,2023-03-19T14:00,30,4
+7,SUBTASK,Еда3,new,Составить список покупки еды3,2023-03-19T17:00,20,4
+10,SUBTASK,new Subtask,new,new Description,+999999999-12-31T23:59:59.999999999,0,4
 
