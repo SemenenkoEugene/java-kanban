@@ -109,7 +109,7 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public Task updateTaskById(Task task) {
         taskController.deleteTaskById(task.getId());
-        prioritizedTasks.remove(task);
+        prioritizedTasks.removeIf(task1 -> Objects.equals(task1.getId(), task.getId()));
         prioritizedTasks.add(task);
         validationTasks(task);
         return taskController.updateTaskById(task);

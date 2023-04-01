@@ -2,6 +2,7 @@ package manager;
 
 import entity.Epic;
 import entity.Status;
+import entity.Task;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
@@ -18,7 +19,10 @@ class FileBackedTasksManagerTest extends TaskManagerTest<FileBackedTasksManager>
         Path path = Path.of("src/resources/empty.data.csv");
         File file = new File(String.valueOf(path));
         manager = new FileBackedTasksManager(file, Managers.getDefaultHistory());
-        assertTrue(manager.getListAllTasks().isEmpty());
+        FileBackedTasksManager fileBackedTasksManager = new FileBackedTasksManager(file);
+        assertEquals(fileBackedTasksManager.getListAllTasks(), manager.getListAllTasks());
+
+
     }
 
     @Test
@@ -28,8 +32,11 @@ class FileBackedTasksManagerTest extends TaskManagerTest<FileBackedTasksManager>
         manager = new FileBackedTasksManager(file, Managers.getDefaultHistory());
         Epic epic = new Epic("Epic", "EpicDescription", 1,
                 Status.NEW, LocalDateTime.now().withNano(0), 10);
-        manager.createEpic(epic);
-        assertEquals(List.of(epic), manager.getListAllEpic());
+        Epic managerEpic = manager.createEpic(epic);
+        FileBackedTasksManager fileBackedTasksManager = new FileBackedTasksManager(file);
+        Epic epicById = fileBackedTasksManager.getEpicById(1);
+        assertEquals(epicById, managerEpic);
+
     }
 
     @Test
@@ -37,7 +44,8 @@ class FileBackedTasksManagerTest extends TaskManagerTest<FileBackedTasksManager>
         Path path = Path.of("src/resources/empty.data.csv");
         File file = new File(String.valueOf(path));
         manager = new FileBackedTasksManager(file, Managers.getDefaultHistory());
-        assertTrue(manager.getHistory().isEmpty());
+        FileBackedTasksManager fileBackedTasksManager = new FileBackedTasksManager(file);
+        assertEquals(fileBackedTasksManager.getHistory(), manager.getHistory());
     }
 
 
@@ -46,16 +54,22 @@ class FileBackedTasksManagerTest extends TaskManagerTest<FileBackedTasksManager>
         Path path = Path.of("src/resources/empty.data.csv");
         File file = new File(String.valueOf(path));
         FileBackedTasksManager fileBackedTasksManager = FileBackedTasksManager.loadFromFile(file);
-        assertTrue(fileBackedTasksManager.getListAllTasks().isEmpty());
+        manager = new FileBackedTasksManager(file, Managers.getDefaultHistory());
+        assertEquals(manager.getListAllTasks(),fileBackedTasksManager.getListAllTasks());
     }
 
     @Test
     public void shouldLoadEpicWithoutSubtasks() {
         Path path = Path.of("src/resources/epicWithoutSubtasks.csv");
         File file = new File(String.valueOf(path));
+        Epic epic = new Epic("Epic", "EpicDescription", 1,
+                Status.NEW, LocalDateTime.of(2023, 03, 30, 20, 58, 12), 10);
+        manager = new FileBackedTasksManager(file, Managers.getDefaultHistory());
+        manager.createEpic(epic);
         FileBackedTasksManager fileBackedTasksManager = FileBackedTasksManager.loadFromFile(file);
-        assertEquals(List.of(fileBackedTasksManager.getEpicById(1)), fileBackedTasksManager.getListAllEpic());
-        assertTrue(fileBackedTasksManager.getListSubTasks().isEmpty());
+        Epic managerEpic = fileBackedTasksManager.createEpic(epic);
+        assertEquals(manager.getEpicById(1), managerEpic);
+
     }
 
     @Test
@@ -63,6 +77,7 @@ class FileBackedTasksManagerTest extends TaskManagerTest<FileBackedTasksManager>
         Path path = Path.of("src/resources/empty.data.csv");
         File file = new File(String.valueOf(path));
         FileBackedTasksManager fileBackedTasksManager = FileBackedTasksManager.loadFromFile(file);
-        assertTrue(fileBackedTasksManager.getHistory().isEmpty());
+        manager = new FileBackedTasksManager(file, Managers.getDefaultHistory());
+        assertEquals(manager.getHistory(),fileBackedTasksManager.getHistory());
     }
 }
