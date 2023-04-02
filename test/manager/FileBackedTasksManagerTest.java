@@ -43,7 +43,7 @@ class FileBackedTasksManagerTest extends TaskManagerTest<FileBackedTasksManager>
     public void shouldSaveEmptyHistory() {
         Path path = Path.of("src/resources/empty.data.csv");
         File file = new File(String.valueOf(path));
-        FileBackedTasksManager fileBackedTasksManager = FileBackedTasksManager.loadFromFile(file);
+        FileBackedTasksManager fileBackedTasksManager = new FileBackedTasksManager(file);
         assertEquals(Collections.emptyList(),fileBackedTasksManager.getHistory());
     }
 
