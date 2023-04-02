@@ -3,6 +3,7 @@ package manager;
 import entity.Epic;
 import entity.Status;
 import entity.Task;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
@@ -14,6 +15,14 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 class FileBackedTasksManagerTest extends TaskManagerTest<FileBackedTasksManager> {
+
+    public static final Path path = Path.of("test.data.csv");
+    File file = new File(String.valueOf(path));
+    @BeforeEach
+    public void beforeEach() {
+        manager = new FileBackedTasksManager(file,Managers.getDefaultHistory());
+    }
+
 
     @Test
     public void shouldSaveAndLoadEpicWithoutSubtasks() {
