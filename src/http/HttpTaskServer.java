@@ -5,6 +5,7 @@ import com.google.gson.JsonSyntaxException;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpServer;
 import entity.Epic;
+import entity.SubTask;
 import entity.Task;
 import manager.Managers;
 import manager.TaskManager;
@@ -149,7 +150,87 @@ public class HttpTaskServer {
 
     }
 
-    private void subtaskHandler(HttpExchange httpExchange) {
+    private void subtaskHandler(HttpExchange httpExchange) throws IOException {
+        int statusCode = 400;
+        String response = "";
+        String requestMethod = httpExchange.getRequestMethod();
+        String path = httpExchange.getRequestURI().toString();
+
+        System.out.println("Обрабатывается запрос " + path + " с методом " + requestMethod);
+
+        switch (requestMethod) {
+            case "GET": {
+                String query = httpExchange.getRequestURI().getQuery();
+                if (query == null) {
+                    statusCode = 200;
+                    response = gson.toJson(taskManager.getListSubTasks());
+                } else {
+                    try {
+                        int id = Integer.parseInt(query.substring(query.indexOf("?id=") + 4));
+                        SubTask subTaskById = taskManager.getSubTaskById(id);
+                        if (subTaskById != null) {
+                            response = gson.toJson(subTaskById);
+                        } else {
+                            response = "Подзадача с таким id не найдена";
+                        }
+                        statusCode = 200;
+                    } catch (StringIndexOutOfBoundsException e) {
+                        response = "В запросе отсутствует необходимый параметр id";
+                    } catch (NumberFormatException e) {
+                        response = "Неверный формат id";
+                    }
+                }
+                break;
+            }
+            case "POST": {
+                try (InputStream requestBody = httpExchange.getRequestBody()) {
+                    String body = new String(requestBody.readAllBytes(), StandardCharsets.UTF_8);
+                    SubTask subTask = gson.fromJson(body, SubTask.class);
+                    Integer id = subTask.getId();
+                    if (taskManager.getSubTaskById(id) != null) {
+                        taskManager.updateSubTaskById(subTask);
+                        statusCode = 201;
+                        response = "Подзадача с id=" + id + " обновлена";
+                    } else {
+                        SubTask createNewSubTask = taskManager.createSubTask(subTask);
+                        Integer createNewSubTaskId = createNewSubTask.getId();
+                        statusCode = 201;
+                        response = "Создана подзадача с id=" + createNewSubTaskId;
+                    }
+                } catch (JsonSyntaxException e) {
+                    statusCode = 400;
+                    response = "Неверный формат запроса";
+                }
+                break;
+            }
+            case "DELETE": {
+                String query = httpExchange.getRequestURI().getQuery();
+                if (query == null) {
+                    taskManager.deleteAll();
+                    statusCode = 200;
+                } else {
+                    try {
+                        int id = Integer.parseInt(query.substring(query.indexOf("?id=") + 4));
+                        taskManager.deleteSubTaskById(id);
+                        statusCode = 200;
+                    } catch (StringIndexOutOfBoundsException e) {
+                        response = "В запросе отсутствует необходимый параметр id";
+                    } catch (NumberFormatException e) {
+                        response = "Неверный формат id";
+                    }
+                }
+                break;
+            }
+            default: {
+                response = "Некорректный запрос";
+            }
+        }
+
+        httpExchange.sendResponseHeaders(statusCode, 0);
+        try (OutputStream responseBody = httpExchange.getResponseBody()) {
+            responseBody.write(response.getBytes());
+        }
+
 
     }
 
