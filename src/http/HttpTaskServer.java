@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpServer;
+import entity.Epic;
 import entity.Task;
 import manager.Managers;
 import manager.TaskManager;
@@ -13,7 +14,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.nio.charset.StandardCharsets;
-import java.util.List;
 
 public class HttpTaskServer {
 
@@ -64,8 +64,88 @@ public class HttpTaskServer {
 
     }
 
-    private void epicHandler(HttpExchange httpExchange) {
+    private void epicHandler(HttpExchange httpExchange) throws IOException {
+        int statusCode = 400;
+        String response = "";
 
+        String requestMethod = httpExchange.getRequestMethod();
+        String path = httpExchange.getRequestURI().toString();
+
+        System.out.println("Обрабатывается запрос " + path + " с методом " + requestMethod);
+
+        switch (requestMethod) {
+            case "GET": {
+                String query = httpExchange.getRequestURI().getQuery();
+                if (query == null) {
+                    statusCode = 200;
+                    String json = gson.toJson(taskManager.getListAllEpic());
+                    response = gson.toJson(json);
+                } else {
+                    try {
+                        int id = Integer.parseInt(query.substring(query.indexOf("?id=") + 4));
+                        Epic epicById = taskManager.getEpicById(id);
+                        if (epicById != null) {
+                            response = gson.toJson(epicById);
+                        } else {
+                            response = "Эпик с данным id не найден";
+                        }
+                        statusCode = 200;
+                    } catch (StringIndexOutOfBoundsException e) {
+                        response = "В запросе отсутствует необходимый параметр id";
+                    } catch (NumberFormatException e) {
+                        response = "Неверный формат id";
+                    }
+                }
+                break;
+            }
+            case "POST": {
+                try (InputStream requestBody = httpExchange.getRequestBody()) {
+                    String body = new String(requestBody.readAllBytes(), StandardCharsets.UTF_8);
+                    Epic epic = gson.fromJson(body, Epic.class);
+                    Integer id = epic.getId();
+                    if (taskManager.getEpicById(id) != null) {
+                        taskManager.updateEpicById(epic);
+                        statusCode = 201;
+                        response = "Эпик с id=" + id + " обновлен";
+                    } else {
+                        Epic createNewEpic = taskManager.createEpic(epic);
+                        Integer createNewEpicId = createNewEpic.getId();
+                        statusCode = 201;
+                        response = "Создан эпик с id=" + createNewEpicId;
+                    }
+                } catch (JsonSyntaxException e) {
+                    statusCode = 400;
+                    response = "Неверный формат запроса";
+                }
+                break;
+            }
+            case "DELETE": {
+                String query = httpExchange.getRequestURI().getQuery();
+                if (query == null) {
+                    taskManager.deleteAll();
+                    statusCode = 200;
+                } else {
+                    try {
+                        int id = Integer.parseInt(query.substring(query.indexOf("?id=") + 4));
+                        taskManager.deleteEpicById(id);
+                        statusCode = 200;
+                    } catch (StringIndexOutOfBoundsException e) {
+                        response = "В запросе отсутсвует необходимый параметр id";
+                    } catch (NumberFormatException e) {
+                        response = "Неверный формат id";
+                    }
+                }
+                break;
+            }
+            default: {
+                response = "Некорректный запрос";
+            }
+        }
+
+        httpExchange.sendResponseHeaders(statusCode, 0);
+        try (OutputStream responseBody = httpExchange.getResponseBody()) {
+            responseBody.write(response.getBytes());
+        }
 
     }
 
