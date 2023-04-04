@@ -190,7 +190,7 @@ public class InMemoryTaskManager implements TaskManager {
 
     public void validationTasks(Task task) {
         boolean taskHasIntersections = checkTime(task);
-        if (taskHasIntersections) {
+        if (!taskHasIntersections) {
             throw new ManagerValidateException("Задача пересекается с уже существующей");
         }
     }
