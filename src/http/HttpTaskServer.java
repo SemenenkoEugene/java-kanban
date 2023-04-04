@@ -37,6 +37,37 @@ public class HttpTaskServer {
         httpServer.createContext(PATH + "/subtask", this::subtaskHandler);
         httpServer.createContext(PATH + "/epic", this::epicHandler);
         httpServer.createContext(PATH + "/history", this::historyHandler);
+        httpServer.createContext(PATH + "/subtask/epic", this::subtasksEpicHandler);
+    }
+
+    private void subtasksEpicHandler(HttpExchange httpExchange) throws IOException {
+        int statusCode = 400;
+        String response = "";
+        String requestMethod = httpExchange.getRequestMethod();
+        String path = httpExchange.getRequestURI().toString();
+
+        System.out.println("Обрабатывается запрос " + path + " с методом " + requestMethod);
+
+        switch (requestMethod) {
+            case "GET": {
+                String query = httpExchange.getRequestURI().getQuery();
+                try {
+                    int id = Integer.parseInt(query.substring(query.indexOf("?id=") + 4));
+                    Epic epicById = taskManager.getEpicById(id);
+                    statusCode = 200;
+                    response = gson.toJson(taskManager.getListAllTasksOfEpic(epicById));
+                } catch (StringIndexOutOfBoundsException e) {
+                    response = "В запросе отсутствует id";
+                } catch (NumberFormatException e) {
+                    response = "Неверный формат id";
+                }
+                break;
+            }
+        }
+        httpExchange.sendResponseHeaders(statusCode, 0);
+        try (OutputStream responseBody = httpExchange.getResponseBody()) {
+            responseBody.write(response.getBytes());
+        }
     }
 
     public static void main(String[] args) throws IOException {
@@ -46,7 +77,7 @@ public class HttpTaskServer {
 
     private void historyHandler(HttpExchange httpExchange) throws IOException {
         int statusCode = 400;
-        String response;
+        String response = "";
         String requestMethod = httpExchange.getRequestMethod();
         String path = httpExchange.getRequestURI().toString();
 
