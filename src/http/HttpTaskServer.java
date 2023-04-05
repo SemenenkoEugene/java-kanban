@@ -11,7 +11,6 @@ import manager.Managers;
 import manager.TaskManager;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.nio.charset.StandardCharsets;
@@ -20,7 +19,7 @@ public class HttpTaskServer {
 
     public static final int PORT = 8080;
     private static final String PATH = "/tasks";
-    private static final String URL = "https://localhost:";
+    private static final String URL = "http://localhost:";
 
     private final HttpServer httpServer;
     private final Gson gson;
@@ -40,6 +39,11 @@ public class HttpTaskServer {
         httpServer.createContext(PATH + "/subtask/epic", this::subtasksEpicHandler);
     }
 
+    public static void main(String[] args) throws IOException {
+        HttpTaskServer httpTaskServer = new HttpTaskServer();
+        httpTaskServer.start();
+    }
+
     private void subtasksEpicHandler(HttpExchange httpExchange) throws IOException {
         int statusCode = 400;
         String response = "";
@@ -48,31 +52,23 @@ public class HttpTaskServer {
 
         System.out.println("Обрабатывается запрос " + path + " с методом " + requestMethod);
 
-        switch (requestMethod) {
-            case "GET": {
-                String query = httpExchange.getRequestURI().getQuery();
-                try {
-                    int id = Integer.parseInt(query.substring(query.indexOf("?id=") + 4));
-                    Epic epicById = taskManager.getEpicById(id);
-                    statusCode = 200;
-                    response = gson.toJson(taskManager.getListAllTasksOfEpic(epicById));
-                } catch (StringIndexOutOfBoundsException e) {
-                    response = "В запросе отсутствует id";
-                } catch (NumberFormatException e) {
-                    response = "Неверный формат id";
-                }
-                break;
+        if ("GET".equals(requestMethod)) {
+            String query = httpExchange.getRequestURI().getQuery();
+            try {
+                int id = Integer.parseInt(query.substring(query.indexOf("?id=") + 4));
+                Epic epicById = taskManager.getEpicById(id);
+                statusCode = 200;
+                response = gson.toJson(taskManager.getListAllTasksOfEpic(epicById));
+            } catch (StringIndexOutOfBoundsException e) {
+                response = "В запросе отсутствует id";
+            } catch (NumberFormatException e) {
+                response = "Неверный формат id";
             }
         }
         httpExchange.sendResponseHeaders(statusCode, 0);
         try (OutputStream responseBody = httpExchange.getResponseBody()) {
             responseBody.write(response.getBytes());
         }
-    }
-
-    public static void main(String[] args) throws IOException {
-        HttpTaskServer server = new HttpTaskServer();
-        server.start();
     }
 
     private void historyHandler(HttpExchange httpExchange) throws IOException {
@@ -131,8 +127,8 @@ public class HttpTaskServer {
                 break;
             }
             case "POST": {
-                try (InputStream requestBody = httpExchange.getRequestBody()) {
-                    String body = new String(requestBody.readAllBytes(), StandardCharsets.UTF_8);
+                try  {
+                    String body = readText(httpExchange);
                     Epic epic = gson.fromJson(body, Epic.class);
                     Integer id = epic.getId();
                     if (taskManager.getEpicById(id) != null) {
@@ -146,7 +142,6 @@ public class HttpTaskServer {
                         response = "Создан эпик с id=" + createNewEpicId;
                     }
                 } catch (JsonSyntaxException e) {
-                    statusCode = 400;
                     response = "Неверный формат запроса";
                 }
                 break;
@@ -214,8 +209,8 @@ public class HttpTaskServer {
                 break;
             }
             case "POST": {
-                try (InputStream requestBody = httpExchange.getRequestBody()) {
-                    String body = new String(requestBody.readAllBytes(), StandardCharsets.UTF_8);
+                try {
+                    String body = readText(httpExchange);
                     SubTask subTask = gson.fromJson(body, SubTask.class);
                     Integer id = subTask.getId();
                     if (taskManager.getSubTaskById(id) != null) {
@@ -229,7 +224,6 @@ public class HttpTaskServer {
                         response = "Создана подзадача с id=" + createNewSubTaskId;
                     }
                 } catch (JsonSyntaxException e) {
-                    statusCode = 400;
                     response = "Неверный формат запроса";
                 }
                 break;
@@ -299,8 +293,8 @@ public class HttpTaskServer {
                 break;
             }
             case "POST": {
-                try (InputStream requestBody = httpExchange.getRequestBody()) {
-                    String body = new String(requestBody.readAllBytes(), StandardCharsets.UTF_8);
+                try {
+                    String body = readText(httpExchange);
                     Task task = gson.fromJson(body, Task.class);
                     Integer id = task.getId();
                     if (taskManager.getTaskById(id) != null) {
@@ -367,9 +361,9 @@ public class HttpTaskServer {
         httpExchange.sendResponseHeaders(statusCode, 0);
         try (OutputStream responseBody = httpExchange.getResponseBody()) {
             responseBody.write(response.getBytes());
+        } finally {
+            httpExchange.close();
         }
-
-
     }
 
     public void start() {
