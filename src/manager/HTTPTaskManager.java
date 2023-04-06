@@ -1,4 +1,4 @@
-package http;
+package manager;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
@@ -10,6 +10,7 @@ import controller.TaskController;
 import entity.Epic;
 import entity.SubTask;
 import entity.Task;
+import http.KVTaskClient;
 import manager.FileBackedTasksManager;
 import manager.HistoryManager;
 import manager.Managers;
