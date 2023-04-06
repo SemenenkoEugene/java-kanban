@@ -24,6 +24,11 @@ public class KVTaskClient {
         apiToken = response.body();
     }
 
+    public static void main(String[] args) throws IOException, InterruptedException {
+        KVTaskClient client = new KVTaskClient("http://localhost:8078/");
+
+    }
+
     public void put(String key, String json) {
         URI uri = URI.create(this.serverURL + "/save/" + key + "?API_TOKEN=" + apiToken);
         HttpRequest request = HttpRequest.newBuilder()
