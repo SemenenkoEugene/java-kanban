@@ -12,9 +12,9 @@ import java.util.*;
  */
 public class InMemoryTaskManager implements TaskManager {
 
-    private final TaskController taskController = new TaskController();
-    private final EpicController epicController = new EpicController();
-    private final SubTaskController subTaskController = new SubTaskController(epicController);
+    protected final TaskController taskController = new TaskController();
+    protected final EpicController epicController = new EpicController();
+    protected final SubTaskController subTaskController = new SubTaskController(epicController);
     protected HistoryManager historyManager = Managers.getDefaultHistory();
 
     private final Set<Task> prioritizedTasks = new TreeSet<>(

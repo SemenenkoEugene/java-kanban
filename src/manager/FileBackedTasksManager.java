@@ -13,7 +13,7 @@ import static utility.ConverterCSV.historyToString;
 
 public class FileBackedTasksManager extends InMemoryTaskManager {
 
-    private final File file;
+    private  File file;
 
     public FileBackedTasksManager(File file, HistoryManager historyManager) {
         super(historyManager);
@@ -23,6 +23,10 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
     public FileBackedTasksManager(File file) {
         super();
         this.file = file;
+    }
+
+    public FileBackedTasksManager(HistoryManager historyManager){
+        super(historyManager);
     }
 
     /**

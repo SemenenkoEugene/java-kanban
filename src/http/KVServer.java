@@ -62,11 +62,13 @@ public class KVServer {
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
+        } finally {
+            h.close();
         }
     }
 
     private void save(HttpExchange h) throws IOException {
-        try (h) {
+        try  {
             System.out.println("\n/save");
             if (!hasAuth(h)) {
                 System.out.println("Запрос не авторизован, нужен параметр в query API_TOKEN со значением апи-ключа");
@@ -93,6 +95,8 @@ public class KVServer {
                 System.out.println("/save ждёт POST-запрос, а получил: " + h.getRequestMethod());
                 h.sendResponseHeaders(405, 0);
             }
+        } finally {
+            h.close();
         }
     }
 
@@ -115,6 +119,11 @@ public class KVServer {
         System.out.println("Открой в браузере http://localhost:" + PORT + "/");
         System.out.println("API_TOKEN: " + apiToken);
         server.start();
+    }
+
+    public void stop() {
+        server.stop(0);
+        System.out.println("Сервер остановлен на " + PORT + " порту!");
     }
 
     private String generateApiToken() {

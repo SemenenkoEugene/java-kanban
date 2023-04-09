@@ -25,7 +25,7 @@ public class Managers {
     }
 
     public static HTTPTaskManager getDefaultHTTP(HistoryManager historyManager) throws IOException, InterruptedException {
-        return new HTTPTaskManager(new File("http://localhost:" + KVServer.PORT), historyManager);
+        return new HTTPTaskManager("http://localhost:" + KVServer.PORT, historyManager);
     }
 
     public static Gson getGson() {

@@ -26,6 +26,7 @@ public class KVTaskClient {
 
     public static void main(String[] args) throws IOException, InterruptedException {
         KVTaskClient client = new KVTaskClient("http://localhost:8078/");
+        client.put("/task","");
 
     }
 

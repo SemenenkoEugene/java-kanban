@@ -11,30 +11,27 @@ import entity.Epic;
 import entity.SubTask;
 import entity.Task;
 import http.KVTaskClient;
-import manager.FileBackedTasksManager;
-import manager.HistoryManager;
-import manager.Managers;
 
-import java.io.File;
 import java.io.IOException;
+import java.util.List;
 import java.util.stream.Collectors;
 
 public class HTTPTaskManager extends FileBackedTasksManager {
 
-    private KVTaskClient kvTaskClient;
+    private final KVTaskClient kvTaskClient;
     private final static String KEY_TASKS = "tasks";
     private final static String KEY_SUBTASKS = "subtasks";
     private final static String KEY_EPICS = "epics";
     private final static String KEY_HISTORY = "history";
     private final static Gson gson = Managers.getGson();
 
-    private final TaskController taskController = new TaskController();
-    private final EpicController epicController = new EpicController();
-    private final SubTaskController subTaskController = new SubTaskController(epicController);
+//    private final TaskController taskController = new TaskController();
+//    private final EpicController epicController = new EpicController();
+//    private final SubTaskController subTaskController = new SubTaskController(epicController);
 
-    public HTTPTaskManager(File file, HistoryManager historyManager) throws IOException, InterruptedException {
-        super(file, historyManager);
-        kvTaskClient = new KVTaskClient(String.valueOf(file));
+    public HTTPTaskManager(String path, HistoryManager historyManager) throws IOException, InterruptedException {
+        super(historyManager);
+        kvTaskClient = new KVTaskClient(path);
 
         JsonElement jsonTasks = JsonParser.parseString(kvTaskClient.load(KEY_TASKS));
         if (!jsonTasks.isJsonNull()) {
@@ -67,12 +64,15 @@ public class HTTPTaskManager extends FileBackedTasksManager {
         if (!jsonHistory.isJsonNull()) {
             JsonArray jsonHistoryAsJsonArray = jsonHistory.getAsJsonArray();
             for (JsonElement jsonId : jsonHistoryAsJsonArray) {
+                List<Task> taskList = taskController.getListAllTasks();
+                List<SubTask> subTaskList = subTaskController.getListSubTasks();
+                List<Epic> epicList = epicController.getListAllEpic();
                 int id = jsonId.getAsInt();
-                if (this.taskController.getTaskById(id) == taskController.getTaskById(id)) {
+                if (taskList.get(id) != null) {
                     this.getTaskById(id);
-                } else if (this.subTaskController.getSubTaskById(id) == subTaskController.getSubTaskById(id)) {
+                } else if (subTaskList.get(id) != null) {
                     this.getSubTaskById(id);
-                } else if (this.epicController.getEpicById(id) == epicController.getEpicById(id)) {
+                } else if (epicList.get(id) != null) {
                     this.getEpicById(id);
                 }
             }

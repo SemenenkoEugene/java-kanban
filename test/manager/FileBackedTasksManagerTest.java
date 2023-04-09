@@ -2,7 +2,6 @@ package manager;
 
 import entity.Epic;
 import entity.Status;
-import entity.Task;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -10,7 +9,6 @@ import java.io.File;
 import java.nio.file.Path;
 import java.time.LocalDateTime;
 import java.util.Collections;
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -22,47 +20,6 @@ class FileBackedTasksManagerTest extends TaskManagerTest<FileBackedTasksManager>
     public void beforeEach() {
         manager = new FileBackedTasksManager(file,Managers.getDefaultHistory());
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     @Test
     public void shouldSaveAndLoadEpicWithoutSubtasks() {

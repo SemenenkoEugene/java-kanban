@@ -73,7 +73,7 @@ public class HttpTaskServer {
 
     private void historyHandler(HttpExchange httpExchange) throws IOException {
         int statusCode = 400;
-        String response = "";
+        String response;
         String requestMethod = httpExchange.getRequestMethod();
         String path = httpExchange.getRequestURI().toString();
 
@@ -113,11 +113,11 @@ public class HttpTaskServer {
                         int id = Integer.parseInt(query.substring(query.indexOf("?id=") + 4));
                         Epic epicById = taskManager.getEpicById(id);
                         if (epicById != null) {
+                            statusCode = 200;
                             response = gson.toJson(epicById);
                         } else {
                             response = "Эпик с данным id не найден";
                         }
-                        statusCode = 200;
                     } catch (StringIndexOutOfBoundsException e) {
                         response = "В запросе отсутствует необходимый параметр id";
                     } catch (NumberFormatException e) {
@@ -127,7 +127,7 @@ public class HttpTaskServer {
                 break;
             }
             case "POST": {
-                try  {
+                try {
                     String body = readText(httpExchange);
                     Epic epic = gson.fromJson(body, Epic.class);
                     Integer id = epic.getId();
@@ -157,7 +157,7 @@ public class HttpTaskServer {
                         taskManager.deleteEpicById(id);
                         statusCode = 200;
                     } catch (StringIndexOutOfBoundsException e) {
-                        response = "В запросе отсутсвует необходимый параметр id";
+                        response = "В запросе отсутствует необходимый параметр id";
                     } catch (NumberFormatException e) {
                         response = "Неверный формат id";
                     }
