@@ -106,8 +106,7 @@ public class HttpTaskServer {
                 String query = httpExchange.getRequestURI().getQuery();
                 if (query == null) {
                     statusCode = 200;
-                    String json = gson.toJson(taskManager.getListAllEpic());
-                    response = gson.toJson(json);
+                    response = gson.toJson(taskManager.getListAllEpic());
                 } else {
                     try {
                         int id = Integer.parseInt(query.substring(query.indexOf("?id=") + 4));
@@ -149,7 +148,7 @@ public class HttpTaskServer {
             case "DELETE": {
                 String query = httpExchange.getRequestURI().getQuery();
                 if (query == null) {
-                    taskManager.deleteAll();
+                    taskManager.deleteAllEpics();
                     statusCode = 200;
                 } else {
                     try {
@@ -231,7 +230,7 @@ public class HttpTaskServer {
             case "DELETE": {
                 String query = httpExchange.getRequestURI().getQuery();
                 if (query == null) {
-                    taskManager.deleteAll();
+                    taskManager.deleteSubTasks();
                     statusCode = 200;
                 } else {
                     try {
@@ -272,8 +271,7 @@ public class HttpTaskServer {
                 String query = httpExchange.getRequestURI().getQuery();
                 if (query == null) {
                     statusCode = 200;
-                    String json = gson.toJson(taskManager.getListAllTasks());
-                    response = gson.toJson(json);
+                    response = gson.toJson(taskManager.getListAllTasks());
                 } else {
                     try {
                         int id = Integer.parseInt(query.substring(query.indexOf("?id=") + 4));
@@ -315,7 +313,7 @@ public class HttpTaskServer {
             case "DELETE": {
                 String query = httpExchange.getRequestURI().getQuery();
                 if (query == null) {
-                    taskManager.deleteAll();
+                    taskManager.deleteAllTasks();
                     statusCode = 200;
                 } else {
                     try {

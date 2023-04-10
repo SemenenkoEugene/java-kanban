@@ -42,6 +42,9 @@ public class Main {
 
         SubTask subTask2 = new SubTask("Еда3", "Составить список покупки еды3", Status.NEW, LocalDateTime.of(2023, 3, 19, 17, 0), 20, epic.getId());
         manager.createSubTask(subTask2);
+
+        Epic epic1 = new Epic("Магазин1", "Купить продукты1", Status.NEW, LocalDateTime.of(2023,3,28,9,15,0), 40);
+        manager.createEpic(epic1);
 //
 //
 //        FileBackedTasksManager manager1 = FileBackedTasksManager.loadFromFile(file);

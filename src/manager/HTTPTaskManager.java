@@ -4,9 +4,6 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
-import controller.EpicController;
-import controller.SubTaskController;
-import controller.TaskController;
 import entity.Epic;
 import entity.SubTask;
 import entity.Task;
@@ -24,10 +21,6 @@ public class HTTPTaskManager extends FileBackedTasksManager {
     private final static String KEY_EPICS = "epics";
     private final static String KEY_HISTORY = "history";
     private final static Gson gson = Managers.getGson();
-
-//    private final TaskController taskController = new TaskController();
-//    private final EpicController epicController = new EpicController();
-//    private final SubTaskController subTaskController = new SubTaskController(epicController);
 
     public HTTPTaskManager(String path, HistoryManager historyManager) throws IOException, InterruptedException {
         super(historyManager);

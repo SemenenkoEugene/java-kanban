@@ -133,11 +133,26 @@ public class InMemoryTaskManager implements TaskManager {
 
     //удаление всех задач, подзадач, эпиков
     @Override
-    public void deleteAll(){
+    public void deleteAll() {
         prioritizedTasks.clear();
         taskController.deleteAllTasks();
         subTaskController.deleteAllSubTasks();
         epicController.deleteAllEpics();
+    }
+    @Override
+    public void deleteAllTasks() {
+        prioritizedTasks.removeIf(task -> task instanceof Task);
+        taskController.deleteAllTasks();
+    }
+
+    @Override
+    public void deleteAllEpics() {
+        epicController.deleteAllEpics();
+    }
+
+    public void deleteSubTasks() {
+        prioritizedTasks.removeIf(task -> task instanceof SubTask);
+        subTaskController.deleteAllSubTasks();
     }
 
     // удаление подзадачи по Id

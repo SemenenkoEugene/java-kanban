@@ -50,6 +50,12 @@ public interface TaskManager {
     //удаление всех задач, подзадач, эпиков
     void deleteAll();
 
+    void deleteAllTasks();
+
+    void deleteAllEpics();
+
+    void deleteSubTasks();
+
     // удаление подзадачи по Id
     void deleteSubTaskById(Integer id);
 
