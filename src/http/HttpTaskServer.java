@@ -89,7 +89,6 @@ public class HttpTaskServer {
         try (OutputStream responseBody = httpExchange.getResponseBody()) {
             responseBody.write(response.getBytes());
         }
-
     }
 
     private void epicHandler(HttpExchange httpExchange) throws IOException {
@@ -130,16 +129,9 @@ public class HttpTaskServer {
                     String body = readText(httpExchange);
                     Epic epic = gson.fromJson(body, Epic.class);
                     Integer id = epic.getId();
-                    if (taskManager.getEpicById(id) != null) {
-                        taskManager.updateEpicById(epic);
-                        statusCode = 201;
-                        response = "Эпик с id=" + id + " обновлен";
-                    } else {
-                        Epic createNewEpic = taskManager.createEpic(epic);
-                        Integer createNewEpicId = createNewEpic.getId();
-                        statusCode = 201;
-                        response = "Создан эпик с id=" + createNewEpicId;
-                    }
+                    taskManager.updateEpicById(epic);
+                    statusCode = 201;
+                    response = "Эпик с id=" + id + " обновлен/создан";
                 } catch (JsonSyntaxException e) {
                     response = "Неверный формат запроса";
                 }
@@ -148,7 +140,7 @@ public class HttpTaskServer {
             case "DELETE": {
                 String query = httpExchange.getRequestURI().getQuery();
                 if (query == null) {
-                    taskManager.deleteAllEpics();
+                    taskManager.deleteAll();
                     statusCode = 200;
                 } else {
                     try {
@@ -230,7 +222,7 @@ public class HttpTaskServer {
             case "DELETE": {
                 String query = httpExchange.getRequestURI().getQuery();
                 if (query == null) {
-                    taskManager.deleteSubTasks();
+                    taskManager.deleteAll();
                     statusCode = 200;
                 } else {
                     try {
@@ -291,20 +283,13 @@ public class HttpTaskServer {
                 break;
             }
             case "POST": {
+                String body = readText(httpExchange);
                 try {
-                    String body = readText(httpExchange);
                     Task task = gson.fromJson(body, Task.class);
                     Integer id = task.getId();
-                    if (taskManager.getTaskById(id) != null) {
-                        taskManager.updateTaskById(task);
-                        statusCode = 201;
-                        response = "Задача с id=" + id + " обновлена";
-                    } else {
-                        Task createNewTask = taskManager.createTask(task);
-                        Integer createNewTaskId = createNewTask.getId();
-                        statusCode = 201;
-                        response = "Создана задача с id=" + createNewTaskId;
-                    }
+                    taskManager.updateTaskById(task);
+                    statusCode = 201;
+                    response = "Задача с id=" + id + " обновлена/создана";
                 } catch (JsonSyntaxException e) {
                     response = "Неверный формат запроса";
                 }
@@ -313,7 +298,7 @@ public class HttpTaskServer {
             case "DELETE": {
                 String query = httpExchange.getRequestURI().getQuery();
                 if (query == null) {
-                    taskManager.deleteAllTasks();
+                    taskManager.deleteAll();
                     statusCode = 200;
                 } else {
                     try {

@@ -22,8 +22,7 @@ public class HTTPTaskManager extends FileBackedTasksManager {
     private final static String KEY_HISTORY = "history";
     private final static Gson gson = Managers.getGson();
 
-    public HTTPTaskManager(String path, HistoryManager historyManager) throws IOException, InterruptedException {
-        super(historyManager);
+    public HTTPTaskManager(String path) throws IOException, InterruptedException {
         kvTaskClient = new KVTaskClient(path);
 
         JsonElement jsonTasks = JsonParser.parseString(kvTaskClient.load(KEY_TASKS));

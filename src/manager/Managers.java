@@ -24,8 +24,8 @@ public class Managers {
         return FileBackedTasksManager.loadFromFile(new File("src/resources/data.csv"));
     }
 
-    public static HTTPTaskManager getDefaultHTTP(HistoryManager historyManager) throws IOException, InterruptedException {
-        return new HTTPTaskManager("http://localhost:" + KVServer.PORT, historyManager);
+    public static TaskManager getDefaultHTTP() throws IOException, InterruptedException {
+        return new HTTPTaskManager("http://localhost:8078/");
     }
 
     public static Gson getGson() {

@@ -16,6 +16,13 @@ public class Task {
     protected LocalDateTime startTime;
     protected long duration;
     public long SECOND_IN_MINUTE = 60L;
+    protected TaskType taskType;
+
+    public TaskType getTaskType() {
+        return taskType;
+    }
+
+
 
     public Task(String name, String description) {
         this.name = name;

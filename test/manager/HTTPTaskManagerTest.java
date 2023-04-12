@@ -24,30 +24,23 @@ class HTTPTaskManagerTest extends TaskManagerTest<HTTPTaskManager> {
         try {
             server = new KVServer();
             server.start();
-            HistoryManager historyManager = Managers.getDefaultHistory();
-            taskManager = Managers.getInMemoryTaskManager(historyManager);
+            taskManager = Managers.getDefaultHTTP();
         } catch (IOException e) {
             System.out.println("Ошибка при создании менеджера");
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
         }
     }
 
     @AfterEach
-    public void stopServer(){
+    public void stopServer() {
         server.stop();
     }
 
     @Test
-    public void shouldLoadTasks(){
-        Task task1 = new Task("Task1", "TaskDescription1", 1,
-                Status.NEW, LocalDateTime.of(2023, 4, 6, 14, 30), 20);
-        Task task2 = new Task("Task2", "TaskDescription2", 2,
-                Status.NEW, LocalDateTime.of(2023, 4, 6, 15, 0), 10);
-        taskManager.createTask(task1);
-        taskManager.createTask(task2);
-        taskManager.getTaskById(task1.getId());
-        taskManager.getTaskById(task2.getId());
-        List<Task> history = manager.getHistory();
-        assertEquals(manager.getListAllTasks(),history);
+    public void shouldLoadTasks() throws IOException, InterruptedException {
+        HTTPTaskManager httpTaskManager = new HTTPTaskManager("http://localhost:8078/");
+        assertEquals(1,httpTaskManager.taskController.getListAllTasks().size());
 
     }
 }

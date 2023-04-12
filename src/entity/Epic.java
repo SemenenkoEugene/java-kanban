@@ -77,7 +77,7 @@ public class Epic extends Task {
             }
             return endTime;
         }
-        return null;
+        return LocalDateTime.MAX;
     }
 
     private LocalDateTime calculateStartTimeEpic() {
@@ -90,7 +90,7 @@ public class Epic extends Task {
             }
             return startTime;
         } else {
-            return null;
+            return LocalDateTime.MIN;
         }
     }
 

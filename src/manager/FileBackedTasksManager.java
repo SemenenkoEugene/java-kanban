@@ -29,6 +29,8 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         super(historyManager);
     }
 
+    public FileBackedTasksManager(){}
+
     /**
      * метод восстановления данных менеджера из файла
      *
