@@ -14,7 +14,7 @@ public class KVTaskClient {
 
     public KVTaskClient(String serverURL) throws IOException, InterruptedException {
         this.serverURL = serverURL;
-        URI uri = URI.create(this.serverURL + "/register");
+        URI uri = URI.create(this.serverURL + "register");
         HttpRequest request = HttpRequest.newBuilder()
                 .GET()
                 .uri(uri)
@@ -31,7 +31,7 @@ public class KVTaskClient {
     }
 
     public void put(String key, String json) {
-        URI uri = URI.create(this.serverURL + "/save/" + key + "?API_TOKEN=" + apiToken);
+        URI uri = URI.create(this.serverURL + "save/" + key + "?API_TOKEN=" + apiToken);
         HttpRequest request = HttpRequest.newBuilder()
                 .POST(HttpRequest.BodyPublishers.ofString(json))
                 .uri(uri)
@@ -50,7 +50,7 @@ public class KVTaskClient {
     }
 
     public String load(String key) {
-        URI uri = URI.create(this.serverURL + "/load/" + key + "?API_TOKEN" + apiToken);
+        URI uri = URI.create(this.serverURL + "load/" + key + "?API_TOKEN" + apiToken);
         HttpRequest request = HttpRequest.newBuilder()
                 .GET()
                 .uri(uri)

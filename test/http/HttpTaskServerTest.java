@@ -20,7 +20,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class HttpTaskServerTest {
 
-    private HttpTaskServer taskServer;
+    private final HttpTaskServer taskServer;
 
     HttpClient client;
     private static final Gson gson = Managers.getGson();
@@ -35,24 +35,23 @@ class HttpTaskServerTest {
     public static final String EPIC_BY_ID_URL = "http://localhost:8080/tasks/epic/?id=2";
 
     Task task = new Task("Построить дом", "Возвести стены", 1,
-            Status.NEW, LocalDateTime.of(2023, 3, 25, 14, 0), 50);
+            Status.NEW, LocalDateTime.of(2023, 4, 25, 14, 0), 50);
     Epic epic = new Epic("Магазин", "Купить продукты", 2,
             Status.NEW, LocalDateTime.of(2023, 3, 28, 9, 15, 0), 40);
     SubTask subTask = new SubTask("Еда", "Составить список покупки еды", 3,
-            Status.NEW, LocalDateTime.of(2023, 3, 19, 11, 0), 50, epic.getId());
+            Status.NEW, LocalDateTime.of(2023, 5, 19, 11, 0), 50, epic.getId());
 
     HttpTaskServerTest() throws IOException {
+        taskServer = new HttpTaskServer();
     }
 
     @BeforeEach
     public void resetServer() throws IOException, InterruptedException {
-        taskServer = new HttpTaskServer();
         taskServer.start();
         client = HttpClient.newHttpClient();
         deleteRequest();
         loadData(task, epic, subTask);
         addHistory(task, subTask);
-
     }
 
     private void deleteRequest() throws IOException, InterruptedException {
@@ -142,7 +141,7 @@ class HttpTaskServerTest {
     @Test
     void shouldGetTasksById() throws IOException, InterruptedException {
         Task task = new Task("Построить дом", "Возвести стены", 1,
-                Status.NEW, LocalDateTime.of(2023, 3, 25, 14, 0), 50);
+                Status.NEW, LocalDateTime.of(2023, 4, 25, 14, 0), 50);
 
         client = HttpClient.newHttpClient();
         URI url = URI.create(TASK_BY_ID_URL);
@@ -184,7 +183,7 @@ class HttpTaskServerTest {
         Epic epic = new Epic("Магазин", "Купить продукты", 2,
                 Status.NEW, LocalDateTime.of(2023, 3, 28, 9, 15, 0), 40);
         SubTask subTask = new SubTask("Еда", "Составить список покупки еды", 3,
-                Status.NEW, LocalDateTime.of(2023, 3, 19, 11, 0), 50, epic.getId());
+                Status.NEW, LocalDateTime.of(2023, 5, 19, 11, 0), 50, epic.getId());
 
         client = HttpClient.newHttpClient();
         URI url = URI.create(SUBTASK_BY_ID_URL);
@@ -386,6 +385,4 @@ class HttpTaskServerTest {
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
         assertEquals(200, response.statusCode());
     }
-
-
 }

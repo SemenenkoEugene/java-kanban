@@ -22,7 +22,8 @@ public class Main {
         File file = new File(String.valueOf(path));
         FileBackedTasksManager manager = new FileBackedTasksManager(file, Managers.getDefaultHistory());
 
-        Task task1 = new Task("Построить дом", "Возвести стены", Status.NEW, LocalDateTime.of(2023,3,25,14,0), 50);
+        Task task1 = new Task("Построить дом", "Возвести стены",
+                Status.NEW, LocalDateTime.of(2023,3,25,14,0), 50);
         manager.createTask(task1);
 //
 //        Task task2 = new Task("Посадить дерево", "Купить саженец", Status.NEW, LocalDateTime.of(2023,3,26,17,50), 20);
@@ -31,10 +32,12 @@ public class Main {
 //        Task task3 = new Task("Посадить дерево1", "Купить саженец1", Status.NEW, LocalDateTime.of(2023,3,27,23,20), 30);
 //        manager.createTask(task3);
 
-        Epic epic = new Epic("Магазин", "Купить продукты", Status.NEW, LocalDateTime.of(2023,3,28,9,15,0), 40);
+        Epic epic = new Epic("Магазин", "Купить продукты",
+                Status.NEW, LocalDateTime.of(2023,3,28,9,15,0), 40);
         manager.createEpic(epic);
 
-        SubTask subTask = new SubTask("Еда", "Составить список покупки еды", Status.NEW, LocalDateTime.of(2023, 3, 19, 11, 0), 50, epic.getId());
+        SubTask subTask = new SubTask("Еда", "Составить список покупки еды",
+                Status.NEW, LocalDateTime.of(2023, 3, 19, 11, 0), 50, epic.getId());
         manager.createSubTask(subTask);
 //
 //        SubTask subTask1 = new SubTask("Еда2", "Составить список покупки еды2", Status.NEW, LocalDateTime.of(2023, 3, 19, 14, 0), 30, epic.getId());

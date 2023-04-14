@@ -17,6 +17,7 @@ public class TaskController {
     // удаление всех задач
     public void deleteAllTasks() {
         tasks.clear();
+
     }
 
     // получение задачи по Id

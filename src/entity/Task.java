@@ -1,5 +1,7 @@
 package entity;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.time.LocalDateTime;
 import java.util.Objects;
 
@@ -9,13 +11,14 @@ import java.util.Objects;
 
 public class Task {
 
+    protected Integer id;
     protected String name;
     protected String description;
-    protected Integer id;
     protected Status status;
     protected LocalDateTime startTime;
     protected long duration;
-    public long SECOND_IN_MINUTE = 60L;
+
+    public  long SECOND_IN_MINUTE = 60L;
     protected TaskType taskType;
 
     public TaskType getTaskType() {

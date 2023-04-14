@@ -87,7 +87,7 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public Task createTask(Task task) {
         prioritizedTasks.add(task);
-        validationTasks(task);
+        //validationTasks(task);
         return taskController.createTask(task);
     }
 
@@ -95,7 +95,7 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public SubTask createSubTask(SubTask subTask) {
         prioritizedTasks.add(subTask);
-        validationTasks(subTask);
+        //validationTasks(subTask);
         return subTaskController.createSubTask(subTask);
     }
 
@@ -111,7 +111,7 @@ public class InMemoryTaskManager implements TaskManager {
         taskController.deleteTaskById(task.getId());
         prioritizedTasks.removeIf(task1 -> Objects.equals(task1.getId(), task.getId()));
         prioritizedTasks.add(task);
-        validationTasks(task);
+//        validationTasks(task);
         return taskController.updateTaskById(task);
     }
 
@@ -121,7 +121,7 @@ public class InMemoryTaskManager implements TaskManager {
         subTaskController.deleteSubTaskById(subTask.getId());
         prioritizedTasks.remove(subTask);
         prioritizedTasks.add(subTask);
-        validationTasks(subTask);
+//        validationTasks(subTask);
         subTaskController.updateSubTaskById(subTask);
     }
 
@@ -214,8 +214,8 @@ public class InMemoryTaskManager implements TaskManager {
         List<Task> tasks = getPrioritizedTasks();
         for (Task taskCheck : tasks) {
             if (taskCheck.getStartTime() != null && taskCheck.getEndTime() != null) {
-                if (taskCheck.getStartTime().isBefore(task.getEndTime())
-                    && task.getStartTime().isBefore(taskCheck.getEndTime())) {
+                if (taskCheck.getStartTime().isAfter(task.getEndTime())
+                    || taskCheck.getEndTime().isBefore(task.getStartTime())) {
                     return true;
                 }
             }

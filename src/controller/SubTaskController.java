@@ -64,13 +64,18 @@ public class SubTaskController {
     // удаление подзадачи по Id
     public void deleteSubTaskById(Integer id) {
         SubTask deleteSubTask = subTasks.get(id);
-        subTasks.remove(deleteSubTask.getId());
-        Epic epicById = epicController.getEpicById(deleteSubTask.getEpicId());
-        epicById.removeSubTask(deleteSubTask);
+        if (deleteSubTask != null) {
+            int epicId = deleteSubTask.getEpicId();
+            subTasks.remove(id);
+            Epic epicById = epicController.getEpicById(epicId);
+            epicById.removeSubTask(deleteSubTask);
+        }
     }
 
     private void updateEpic(SubTask subTask) {
         Epic epicById = epicController.getEpicById(subTask.getEpicId());
-        epicById.addSubTask(subTask);
+        if (epicById != null) {
+            epicById.addSubTask(subTask);
+        }
     }
 }

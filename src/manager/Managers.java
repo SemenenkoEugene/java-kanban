@@ -24,13 +24,14 @@ public class Managers {
         return FileBackedTasksManager.loadFromFile(new File("src/resources/data.csv"));
     }
 
-    public static TaskManager getDefaultHTTP() throws IOException, InterruptedException {
+    public static HTTPTaskManager getDefaultHTTP() throws IOException, InterruptedException {
         return new HTTPTaskManager("http://localhost:8078/");
     }
 
     public static Gson getGson() {
-        GsonBuilder gsonBuilder = new GsonBuilder();
-        gsonBuilder.registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter());
-        return gsonBuilder.create();
+        return new GsonBuilder()
+                .setPrettyPrinting()
+                .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter())
+                .create();
     }
 }

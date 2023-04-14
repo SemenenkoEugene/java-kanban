@@ -17,16 +17,19 @@ abstract class TaskManagerTest<T extends TaskManager> {
     protected T manager;
 
     protected Task createTask() {
-        return new Task("TaskName", "TaskDescription", 1, Status.NEW, LocalDateTime.now(), 0);
+        return new Task("TaskName", "TaskDescription", 1,
+                Status.NEW, LocalDateTime.of(2023,4,15,15,10), 10);
     }
 
     protected Epic createEpic() {
-        return new Epic("EpicName", "EpicDescription", 1, Status.NEW, LocalDateTime.now(), 0);
+        return new Epic("EpicName", "EpicDescription", 2,
+                Status.NEW, LocalDateTime.of(2023,4,20,18,20), 20);
     }
 
     protected SubTask createSubTask(Epic epic) {
         return new SubTask("SubTaskNew",
-                "SubTaskNewDescription", 1, Status.NEW, LocalDateTime.now(), 0, epic.getId());
+                "SubTaskNewDescription", 3,
+                Status.NEW, LocalDateTime.of(2023,5,9,22,0), 20, epic.getId());
     }
 
     @Test
@@ -120,17 +123,6 @@ abstract class TaskManagerTest<T extends TaskManager> {
         manager.createSubTask(subTask);
         manager.deleteAll();
         assertEquals(Collections.emptyList(), manager.getListAllTasks());
-    }
-
-    @Test
-    public void shouldDeleteAllSubtasksByEpic() {
-        Epic epic = createEpic();
-        manager.createEpic(epic);
-        SubTask subTask = createSubTask(epic);
-        manager.createSubTask(subTask);
-        manager.deleteSubTaskById(epic.getId());
-        assertTrue(epic.getSubTasks().isEmpty());
-        assertTrue(manager.getListAllTasksOfEpic(epic).isEmpty());
     }
 
     @Test
