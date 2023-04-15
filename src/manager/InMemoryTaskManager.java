@@ -86,16 +86,18 @@ public class InMemoryTaskManager implements TaskManager {
     // создание новой задачи
     @Override
     public Task createTask(Task task) {
+        if (checkTime(task)) {
+            throw new ManagerValidateException("Задача пересекается с уже существующей");
+        }
         prioritizedTasks.add(task);
-        //validationTasks(task);
         return taskController.createTask(task);
     }
 
     // создание новой подзадачи
     @Override
     public SubTask createSubTask(SubTask subTask) {
+
         prioritizedTasks.add(subTask);
-        //validationTasks(subTask);
         return subTaskController.createSubTask(subTask);
     }
 
@@ -108,10 +110,14 @@ public class InMemoryTaskManager implements TaskManager {
     // обновление задачи
     @Override
     public Task updateTaskById(Task task) {
+        Task oldTask = taskController.getTaskById(task.getId());
+        prioritizedTasks.remove(oldTask);
+        if (checkTime(task)) {
+            prioritizedTasks.add(oldTask);
+            throw new ManagerValidateException("Задача пересекается с уже существующей");
+        }
         taskController.deleteTaskById(task.getId());
-        prioritizedTasks.removeIf(task1 -> Objects.equals(task1.getId(), task.getId()));
         prioritizedTasks.add(task);
-//        validationTasks(task);
         return taskController.updateTaskById(task);
     }
 
@@ -139,6 +145,7 @@ public class InMemoryTaskManager implements TaskManager {
         subTaskController.deleteAllSubTasks();
         epicController.deleteAllEpics();
     }
+
     @Override
     public void deleteAllTasks() {
         prioritizedTasks.removeIf(task -> task instanceof Task);
@@ -214,8 +221,14 @@ public class InMemoryTaskManager implements TaskManager {
         List<Task> tasks = getPrioritizedTasks();
         for (Task taskCheck : tasks) {
             if (taskCheck.getStartTime() != null && taskCheck.getEndTime() != null) {
-                if (taskCheck.getStartTime().isAfter(task.getEndTime())
-                    || taskCheck.getEndTime().isBefore(task.getStartTime())) {
+                if (
+                        (taskCheck.getStartTime().equals(task.getStartTime())
+                         && taskCheck.getEndTime().equals(task.getEndTime()))
+                        || (taskCheck.getStartTime().isBefore(task.getStartTime())
+                            && (taskCheck.getEndTime().isAfter(task.getStartTime()))
+                            || (taskCheck.getStartTime().isAfter(task.getStartTime()))
+                               && (taskCheck.getStartTime().isBefore(task.getEndTime())))
+                ) {
                     return true;
                 }
             }

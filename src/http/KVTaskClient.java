@@ -1,5 +1,7 @@
 package http;
 
+import manager.ManagerSaveException;
+
 import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -22,12 +24,6 @@ public class KVTaskClient {
         HttpClient client = HttpClient.newHttpClient();
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
         apiToken = response.body();
-    }
-
-    public static void main(String[] args) throws IOException, InterruptedException {
-        KVTaskClient client = new KVTaskClient("http://localhost:8078/");
-        client.put("/task","");
-
     }
 
     public void put(String key, String json) {
@@ -62,7 +58,7 @@ public class KVTaskClient {
                     HttpResponse.BodyHandlers.ofString(StandardCharsets.UTF_8));
             return response.body();
         } catch (IOException | InterruptedException e) {
-            throw new RuntimeException(e);
+            throw new ManagerSaveException("Не удалось прочитать данные из файла", e);
         }
     }
 }

@@ -29,7 +29,6 @@ class HttpTaskServerTest {
     public static final String SUBTASK_URL = "http://localhost:8080/tasks/subtask/";
     public static final String BASE_URL = "http://localhost:8080/tasks/";
     public static final String HISTORY_URL = "http://localhost:8080/tasks/history/";
-    public static final String SUBTASK_EPIC_URL = "http://localhost:8080/tasks/subtask/epic/";
     public static final String TASK_BY_ID_URL = "http://localhost:8080/tasks/task/?id=1";
     public static final String SUBTASK_BY_ID_URL = "http://localhost:8080/tasks/subtask/?id=3";
     public static final String EPIC_BY_ID_URL = "http://localhost:8080/tasks/epic/?id=2";
@@ -41,7 +40,7 @@ class HttpTaskServerTest {
     SubTask subTask = new SubTask("Еда", "Составить список покупки еды", 3,
             Status.NEW, LocalDateTime.of(2023, 5, 19, 11, 0), 50, epic.getId());
 
-    HttpTaskServerTest() throws IOException {
+    HttpTaskServerTest() throws IOException, InterruptedException {
         taskServer = new HttpTaskServer();
     }
 

@@ -15,7 +15,7 @@ class HTTPTaskManagerTest extends FileBackedTasksManagerTest {
         try {
             server = new KVServer();
             server.start();
-            manager = Managers.getDefaultHTTP();
+            manager = Managers.getDefault();
         } catch (IOException e) {
             System.out.println("Ошибка при создании менеджера");
         } catch (InterruptedException e) {

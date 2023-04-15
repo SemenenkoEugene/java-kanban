@@ -3,8 +3,6 @@ package manager;
 import adapter.LocalDateTimeAdapter;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import http.HttpTaskServer;
-import http.KVServer;
 
 import java.io.File;
 import java.io.IOException;
@@ -20,11 +18,11 @@ public class Managers {
         return new InMemoryHistoryManager();
     }
 
-    public static TaskManager getDefault() {
+    public static FileBackedTasksManager getDefaultFileBacked() {
         return FileBackedTasksManager.loadFromFile(new File("src/resources/data.csv"));
     }
 
-    public static HTTPTaskManager getDefaultHTTP() throws IOException, InterruptedException {
+    public static HTTPTaskManager getDefault() throws IOException, InterruptedException {
         return new HTTPTaskManager("http://localhost:8078/");
     }
 

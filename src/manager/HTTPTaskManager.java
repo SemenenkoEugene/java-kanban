@@ -56,16 +56,17 @@ public class HTTPTaskManager extends FileBackedTasksManager {
         if (!jsonHistory.isJsonNull()) {
             JsonArray jsonHistoryAsJsonArray = jsonHistory.getAsJsonArray();
             for (JsonElement jsonId : jsonHistoryAsJsonArray) {
+                List<Task> history = historyManager.getHistory();
+                int id = jsonId.getAsInt();
                 List<Task> taskList = taskController.getListAllTasks();
                 List<SubTask> subTaskList = subTaskController.getListSubTasks();
                 List<Epic> epicList = epicController.getListAllEpic();
-                int id = jsonId.getAsInt();
                 if (taskList.get(id) != null) {
-                    this.getTaskById(id);
+                    history.add(taskList.get(id));
                 } else if (subTaskList.get(id) != null) {
-                    this.getSubTaskById(id);
+                    history.add(subTaskList.get(id));
                 } else if (epicList.get(id) != null) {
-                    this.getEpicById(id);
+                    history.add(epicList.get(id));
                 }
             }
         }
