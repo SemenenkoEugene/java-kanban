@@ -37,7 +37,7 @@ class HTTPTaskManagerTest extends FileBackedTasksManagerTest {
     }
 
     @Test
-    public void loadTest() {
+    public void shouldReturnTask() throws IOException, InterruptedException {
         Task task1 = new Task("Task1", "Description1",
                 Status.NEW, LocalDateTime.of(2023, 4, 15, 19, 40), 15);
         Task task2 = new Task("Task2", "Description2",
@@ -46,9 +46,9 @@ class HTTPTaskManagerTest extends FileBackedTasksManagerTest {
         manager.createTask(task2);
         manager.getTaskById(task1.getId());
         manager.getTaskById(task2.getId());
-        List<Task> history = manager.getHistory();
+        TaskManager httpTaskManager = Managers.getDefault();
 
-        assertArrayEquals(List.of(task1, task2).toArray(), history.toArray());
-
+        assertArrayEquals(List.of(task1, task2).toArray(), httpTaskManager.getListAllTasks().toArray());
+        assertEquals(List.of(task1,task2), httpTaskManager.getListAllTasks());
     }
 }

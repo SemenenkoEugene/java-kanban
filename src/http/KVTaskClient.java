@@ -46,7 +46,7 @@ public class KVTaskClient {
     }
 
     public String load(String key) {
-        URI uri = URI.create(this.serverURL + "load/" + key + "?API_TOKEN" + apiToken);
+        URI uri = URI.create(this.serverURL + "load/" + key + "?API_TOKEN=" + apiToken);
         HttpRequest request = HttpRequest.newBuilder()
                 .GET()
                 .uri(uri)

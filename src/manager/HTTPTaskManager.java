@@ -30,7 +30,7 @@ public class HTTPTaskManager extends FileBackedTasksManager {
             JsonArray jsonTasksAsJsonArray = jsonTasks.getAsJsonArray();
             for (JsonElement jsonTask : jsonTasksAsJsonArray) {
                 Task task = gson.fromJson(jsonTask, Task.class);
-                this.createTask(task);
+                taskController.createTask(task);
             }
         }
 
@@ -39,7 +39,7 @@ public class HTTPTaskManager extends FileBackedTasksManager {
             JsonArray jsonSubTasksAsJsonArray = jsonSubTasks.getAsJsonArray();
             for (JsonElement jsonSubTask : jsonSubTasksAsJsonArray) {
                 SubTask subTask = gson.fromJson(jsonSubTask, SubTask.class);
-                this.createSubTask(subTask);
+                subTaskController.createSubTask(subTask);
             }
         }
 
@@ -48,7 +48,7 @@ public class HTTPTaskManager extends FileBackedTasksManager {
             JsonArray jsonEpicsAsJsonArray = jsonEpics.getAsJsonArray();
             for (JsonElement jsonEpic : jsonEpicsAsJsonArray) {
                 Epic epic = gson.fromJson(jsonEpic, Epic.class);
-                this.createEpic(epic);
+                epicController.createEpic(epic);
             }
         }
 
@@ -56,17 +56,16 @@ public class HTTPTaskManager extends FileBackedTasksManager {
         if (!jsonHistory.isJsonNull()) {
             JsonArray jsonHistoryAsJsonArray = jsonHistory.getAsJsonArray();
             for (JsonElement jsonId : jsonHistoryAsJsonArray) {
-                List<Task> history = historyManager.getHistory();
                 int id = jsonId.getAsInt();
                 List<Task> taskList = taskController.getListAllTasks();
                 List<SubTask> subTaskList = subTaskController.getListSubTasks();
                 List<Epic> epicList = epicController.getListAllEpic();
-                if (taskList.get(id) != null) {
-                    history.add(taskList.get(id));
-                } else if (subTaskList.get(id) != null) {
-                    history.add(subTaskList.get(id));
-                } else if (epicList.get(id) != null) {
-                    history.add(epicList.get(id));
+                if (taskList.size() != 0) {
+                    this.getTaskById(id);
+                } else if (subTaskList.size() != 0) {
+                    this.getSubTaskById(id);
+                } else if (epicList.size() != 0) {
+                    this.getEpicById(id);
                 }
             }
         }

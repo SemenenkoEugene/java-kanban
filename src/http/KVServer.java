@@ -32,7 +32,7 @@ public class KVServer {
         kvServer.start();
     }
 
-    private void load(HttpExchange h) {
+    protected void load(HttpExchange h) {
         try {
             System.out.println("\n/load");
             if (!hasAuth(h)) {
