@@ -37,7 +37,7 @@ class HTTPTaskManagerTest extends FileBackedTasksManagerTest {
     }
 
     @Test
-    public void shouldReturnTask() throws IOException, InterruptedException {
+    public void shouldReturnTasks() throws IOException, InterruptedException {
         Task task1 = new Task("Task1", "Description1",
                 Status.NEW, LocalDateTime.of(2023, 4, 15, 19, 40), 15);
         Task task2 = new Task("Task2", "Description2",
